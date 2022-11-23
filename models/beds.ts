@@ -16,6 +16,12 @@ const bedSchema = new Schema(
                 required: false,
             },
         ],
+        images: [
+            {
+                type: String,
+                required: false,
+            },
+        ],
         variants: [
             {
                 type: Schema.Types.ObjectId,

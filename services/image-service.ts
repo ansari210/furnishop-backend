@@ -52,7 +52,7 @@ const fileSizeFormatter = (bytes: number, decimal: number) => {
 };
 export default multipleFileUpload;
 
-//  get all multiple beds 
+//  get all multiple beds
 export const getMultipleFilesService = async () => {
     const response = await multiplefile.find();
     return response;
@@ -90,7 +90,7 @@ export const resizeImageAndUpload = async (
 
     try {
         await sharp(file.path)
-            .resize(1808, 678, {
+            .resize(800, 650, {
                 fit: "cover",
             })
             .webp({ quality: 70 })
