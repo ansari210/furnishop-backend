@@ -1,4 +1,5 @@
 import { Document, model, Schema } from "mongoose";
+import accessoriesIcons from "./accessoriesIcons";
 
 export interface HeadboardVariant extends Document {
     _id: string;
@@ -50,7 +51,7 @@ const HeadboardVariantSchema = new Schema<HeadboardVariant>(
                 {
                     name: {
                         type: Schema.Types.ObjectId,
-                        ref: "accessoriesIcons",
+                        ref: accessoriesIcons,
                     },
                     image: {
                         type: String,

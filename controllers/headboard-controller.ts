@@ -1,9 +1,16 @@
 import { Request, Response } from "express";
+import { isValidObjectId } from "mongoose";
+import headboards from "../models/headboards";
+import headboardVariants from "../models/headboardVariants";
 import {
     createHeadboardService,
     deleteHeadboardService,
     getAllHeadboardsService,
     getHeadboardByIdService,
+    getHeadboardByIdServiceWithVariants,
+    getHeadboardCountService,
+    getHeadboardVariantByIdService,
+    getHeadboardWithVariantService,
     updateHeadboardService,
 } from "../services/headboard-services";
 
@@ -42,7 +49,10 @@ export const getHeadboardByIdController = async (
     res: Response
 ) => {
     try {
-        const headboard = await getHeadboardByIdService(req.params.id);
+        const headboard = await getHeadboardByIdServiceWithVariants(
+            req.params.id
+        );
+
         res.status(200).json(headboard);
     } catch (error) {
         res.status(400).json({ error });
@@ -91,6 +101,132 @@ export const deleteHeadboardController = async (
     try {
         const headboard = await deleteHeadboardService(req.params.id);
         res.status(200).json({ headboard });
+    } catch (error) {
+        res.status(400).json({ error });
+    }
+};
+
+export const getAllHeadboardWithImageController = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        const {
+            page = 1,
+            limit = 20,
+            category,
+            returnWhenNoVariants,
+        } = req.query as any;
+
+        const headboards: any = await getHeadboardWithVariantService(
+            page,
+            limit,
+            category,
+            returnWhenNoVariants
+        );
+
+        res.json({
+            data: headboards.data,
+            totalPages: headboards.pages,
+            nextPage: Number(page) < headboards.pages ? Number(page) + 1 : null,
+        });
+    } catch (error: any) {
+        res.status(400).json({ error: error?.message });
+    }
+};
+
+export const createHeadboardVariantController = async (
+    req: Request,
+    res: Response
+) => {
+    const { id } = req.params;
+
+    if (!isValidObjectId(id)) {
+        return res.status(400).json({ message: "Invalid ID provided." });
+    }
+
+    if (!req.body?.size) {
+        return res.status(400).json({ message: "Bed Size cannot be empty." });
+    }
+
+    const headboardFind = await headboards
+        .findOne({ _id: id })
+        .populate("variants", "size")
+        .lean();
+
+    if (!headboardFind) {
+        return res.status(400).json({ message: "Invalid ID provided." });
+    }
+
+    //CHECKING FOR DUPLICATE BED SIZES (START)
+    const allHeadboardVariants =
+        (headboardFind && headboardFind.variants) || [];
+
+    const findDuplicateBedSize = allHeadboardVariants.find(
+        (variant: any) => variant.size == req.body.size
+    );
+
+    if (findDuplicateBedSize) {
+        return res.status(400).json({ message: "Size Already Exists" });
+    }
+    //CHECKING FOR DUPLICATE BED SIZES (END)
+
+    headboardVariants.create(req.body, async (err: any, data: any) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        await headboards.findByIdAndUpdate(id, {
+            $push: {
+                variants: data._id,
+            },
+        });
+        res.status(200).json({
+            message: "Headboard Added Successfully",
+            data,
+        });
+    });
+};
+
+export const updateHeadboardVariantController = async (
+    req: Request,
+    res: Response
+) => {
+    const { id } = req.params;
+
+    if (!isValidObjectId(id)) {
+        return res.status(400).json({ message: "Invalid ID provided." });
+    }
+
+    const findHeadboardVarient = headboardVariants.findById(id);
+
+    if (!findHeadboardVarient) {
+        return res.status(400).json({ message: "Invalid ID provided." });
+    }
+
+    const updateHeadboard = await headboardVariants.findByIdAndUpdate(
+        { _id: id },
+        req.body,
+        {
+            new: true,
+        }
+    );
+
+    res.status(200).json({
+        message: "Bed Variant Updated Succesfully",
+        data: updateHeadboard,
+    });
+};
+
+export const getHeadboardVariantByIdController = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        const { id } = req.params;
+
+        const findHeadboardVarient = await getHeadboardVariantByIdService(id);
+
+        res.status(200).json(findHeadboardVarient);
     } catch (error) {
         res.status(400).json({ error });
     }

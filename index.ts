@@ -11,6 +11,7 @@ import userRoutes from "./routes/user";
 import orderRoutes from "./routes/order";
 import bedsRoutes from './routes/fileroutes'
 import dotenv from 'dotenv'
+import headboardRoutes from "./routes/headboard";
 
 dotenv.config({
     path: `.env.development`,
@@ -51,8 +52,9 @@ app.use("/api/beds", bedRoutes);
 app.use("/api/icons", iconRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/order", orderRoutes);
+app.use("/api/headboard", headboardRoutes);
 
-app.use('/api/bedsMultiple', bedsRoutes);
+app.use("/api/bedsMultiple", bedsRoutes);
 
 // PORT LISTEN
 app.listen(port, () => {
