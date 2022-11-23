@@ -1,4 +1,4 @@
-import "dotenv/config";
+// import "dotenv/config";
 import cors from "cors";
 import bedRoutes from "./routes/beds";
 import iconRoutes from "./routes/icons";
@@ -10,7 +10,12 @@ import paymentRoutes from "./routes/payment";
 import userRoutes from "./routes/user";
 import orderRoutes from "./routes/order";
 import bedsRoutes from './routes/fileroutes'
+import dotenv from 'dotenv'
 
+dotenv.config({
+    path: `.env.development`,
+    override: true
+})
 // INITIALIZING EXPREESS
 const app: Express = express();
 const port = process.env.PORT;
@@ -52,4 +57,8 @@ app.use('/api/bedsMultiple', bedsRoutes);
 // PORT LISTEN
 app.listen(port, () => {
     console.log(`Server Runnig http://localhost:${port}`);
+    // if (process.env.NODE_ENV === 'development') {
+    //     console.log('SIMPLE')
+    // }
+
 });
