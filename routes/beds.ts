@@ -206,10 +206,57 @@ router.get("/:id", async (req, res) => {
         res.status(500).send(error);
     }
 });
+// GET BED BY SLUG
+router.get("/:slug", async (req, res) => {
+    const { slug, id } = req.params as any;
+    try {
+        const getCurrentSizeBed = (await beds
+            .findOne({ slug: slug })
+            .populate({
+                path: "variants",
+                populate: {
+                    path: "accessories.color.name accessories.headboard.name accessories.storage.name accessories.feet.name accessories.mattress.name",
+                    select: "label value image",
+                },
+                match: { isDraft: { $ne: true } },
+            })
+            .lean()) as any;
+
+        const getAllbedSizes = (await beds
+            .findOne({ _id: id }, { variants: 1, _id: 0 })
+            .populate({
+                path: "variants",
+                select: "size -_id price",
+                match: { isDraft: { $ne: true } },
+            })
+            .lean()) as any;
+
+        getCurrentSizeBed.availabeSizes = await Promise.all(
+            getAllbedSizes?.variants?.map(async (item: any) => {
+                const icon = (await accessoriesIcons
+                    .findOne({
+                        value: item.size,
+                    })
+                    .lean()) as any;
+
+                console.log({ item: item });
+                if (icon) {
+                    icon.price = item?.price?.salePrice;
+                }
+                return icon;
+            })
+        );
+
+        res.send(getCurrentSizeBed);
+    } catch (error: any) {
+        res.status(500).send(error);
+    }
+});
+
 //UPLOAD NEW BED
 
 router.post("/create", isAdmin, async (req: Request, res: Response) => {
-    const { name, description, images, categories } = req.body;
+    const { name, slug, description, categories, images } = req.body;
 
     if (!name) {
         return res
@@ -220,6 +267,7 @@ router.post("/create", isAdmin, async (req: Request, res: Response) => {
     try {
         const createBed = await beds.create({
             name,
+            slug,
             description,
             images: Array.isArray(images) ? images : undefined,
             categories: Array.isArray(categories) ? categories : undefined,
