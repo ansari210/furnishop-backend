@@ -90,7 +90,7 @@ export const resizeImageAndUpload = async (
 
     try {
         await sharp(file.path)
-            .resize(800, 650, {
+            .resize(850, 600, {
                 fit: "cover",
             })
             .webp({ quality: 70 })
