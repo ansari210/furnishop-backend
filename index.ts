@@ -9,14 +9,12 @@ import authRoutes from "./routes/auth";
 import paymentRoutes from "./routes/payment";
 import userRoutes from "./routes/user";
 import orderRoutes from "./routes/order";
-import bedsRoutes from './routes/fileroutes'
-import dotenv from 'dotenv'
+import bedsRoutes from "./routes/fileroutes";
+import dotenv from "dotenv";
 import headboardRoutes from "./routes/headboard";
+dotenv.config();
+console.log(`Loaded env from .env.${process.env.NODE_ENV}`);
 
-dotenv.config({
-    path: `.env.development`,
-    override: true
-})
 // INITIALIZING EXPREESS
 const app: Express = express();
 const port = process.env.PORT;
@@ -62,5 +60,4 @@ app.listen(port, () => {
     // if (process.env.NODE_ENV === 'development') {
     //     console.log('SIMPLE')
     // }
-
 });

@@ -167,10 +167,11 @@ router.get("/get-all-beds-with-base-image-admin", async (req, res) => {
 
 // GET BED BY ID
 router.get("/:id", async (req, res) => {
-    const { id, size } = req.params as any;
+    const { id } = req.params as any;
+    const { size } = req.query as any;
     try {
         if (isValidObjectId(id)) {
-            console.log('⇄', id)
+            console.log("⇄", id);
             if (size) {
                 const getCurrentSizeBed = (await beds
                     .findOne({ _id: id })
@@ -258,10 +259,45 @@ router.get("/:id", async (req, res) => {
 
                 res.send(getCurrentSizeBed);
             } else {
-                const getAllBeds = await beds
-                    .findOne({ slug: id })
-                    .populate("variants");
-                res.json(getAllBeds);
+                const getCurrentSizeBed = (await beds
+                    .findOne({ slug: id, $arrayElemAt: ["variants", 0] })
+                    .populate({
+                        path: "variants.0",
+                        populate: {
+                            path: "accessories.color.name accessories.headboard.name accessories.storage.name accessories.feet.name accessories.mattress.name",
+                            select: "label value image",
+                        },
+                        match: { isDraft: { $ne: true } },
+                    })
+                    .lean()) as any;
+
+                const getAllbedSizes = (await beds
+                    .findOne({ slug: id }, { variants: 1, _id: 0 })
+                    .populate({
+                        path: "variants",
+                        select: "size -_id price",
+                        match: { isDraft: { $ne: true } },
+                    })
+                    .lean()) as any;
+
+                getCurrentSizeBed.availabeSizes = await Promise.all(
+                    getAllbedSizes?.variants?.map(async (item: any) => {
+                        const icon = (await accessoriesIcons
+                            .findOne({
+                                value: item.size,
+                            })
+                            .lean()) as any;
+
+                        console.log({ item: item });
+                        if (icon) {
+                            icon.price = item?.price?.salePrice;
+                        }
+                        return icon;
+                    })
+                );
+
+                getCurrentSizeBed.variants = [getCurrentSizeBed.variants[0]];
+                res.json(getCurrentSizeBed);
             }
         }
     } catch (error: any) {
