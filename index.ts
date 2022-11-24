@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth";
 import paymentRoutes from "./routes/payment";
 import userRoutes from "./routes/user";
+import reviews from "./routes/reviews";
 import orderRoutes from "./routes/order";
 import bedsRoutes from './routes/fileroutes'
 import dotenv from 'dotenv'
@@ -55,6 +56,7 @@ app.use("/api/order", orderRoutes);
 app.use("/api/headboard", headboardRoutes);
 
 app.use("/api/bedsMultiple", bedsRoutes);
+app.use("/api/reviews", reviews);
 
 // PORT LISTEN
 app.listen(port, () => {
