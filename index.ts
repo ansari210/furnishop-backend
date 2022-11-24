@@ -12,9 +12,14 @@ import orderRoutes from "./routes/order";
 import bedsRoutes from "./routes/fileroutes";
 import dotenv from "dotenv";
 import headboardRoutes from "./routes/headboard";
-dotenv.config();
-console.log(`Loaded env from .env.${process.env.NODE_ENV}`);
 
+dotenv.config({
+    path:
+        process.env.NODE_ENV === "development"
+            ? ".env.development"
+            : ".env.production",
+    override: true,
+});
 // INITIALIZING EXPREESS
 const app: Express = express();
 const port = process.env.PORT;
