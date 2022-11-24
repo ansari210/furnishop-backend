@@ -269,22 +269,23 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-
-
 //UPLOAD NEW BED
 
 router.post("/create", isAdmin, async (req: Request, res: Response) => {
-    const { name, slug, description, categories } = req.body;
+    const { name, slug, description, categories, images } = req.body;
+
     if (!name) {
         return res
             .status(404)
             .json({ message: "Product name cannot be empty" });
     }
+
     try {
         const createBed = await beds.create({
             name,
             slug,
             description,
+            images: Array.isArray(images) ? images : undefined,
             categories: Array.isArray(categories) ? categories : undefined,
         });
         res.json({

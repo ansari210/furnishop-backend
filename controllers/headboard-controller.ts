@@ -43,6 +43,30 @@ export const createHeadboardController = async (
     }
 };
 
+//delete headboard controller
+export const deleteHeadboardController = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        const { id } = req.params;
+
+        if (!isValidObjectId(id)) {
+            return res.status(400).json({ message: "Invalid headboard id" });
+        }
+
+        const headboard = await deleteHeadboardService(id);
+
+        if (!headboard) {
+            return res.status(404).json({ message: "Headboard not found" });
+        }
+
+        res.status(200).json({ message: "Headboard deleted successfully" });
+    } catch (error) {
+        res.status(400).json({ error });
+    }
+};
+
 //get headboard by id controller
 export const getHeadboardByIdController = async (
     req: Request,
@@ -87,19 +111,6 @@ export const updateHeadboardController = async (
             variants,
         });
 
-        res.status(200).json({ headboard });
-    } catch (error) {
-        res.status(400).json({ error });
-    }
-};
-
-//delete headboard controller
-export const deleteHeadboardController = async (
-    req: Request,
-    res: Response
-) => {
-    try {
-        const headboard = await deleteHeadboardService(req.params.id);
         res.status(200).json({ headboard });
     } catch (error) {
         res.status(400).json({ error });
