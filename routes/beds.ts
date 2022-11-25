@@ -442,7 +442,7 @@ router.post(
 router.patch("/update-bed/:id", isAdmin, async (req, res) => {
     const { id } = req.params;
 
-    const { name, slug, description, categories, images } = req.body;
+    const { name, slug, description, categories, images, isDraft } = req.body;
 
     if (!isValidObjectId(id)) {
         return res.status(400).json({ message: "Invalid ID provided." });
@@ -455,6 +455,7 @@ router.patch("/update-bed/:id", isAdmin, async (req, res) => {
                 name,
                 slug,
                 description,
+                isDraft: isDraft,
                 images: Array.isArray(images) ? images : undefined,
                 categories: Array.isArray(categories) ? categories : undefined,
             },
