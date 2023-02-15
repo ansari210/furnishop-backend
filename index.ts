@@ -1,5 +1,6 @@
 // import "dotenv/config";
 import cors from "cors";
+import dotenv from 'dotenv'
 import bedRoutes from "./routes/beds";
 import iconRoutes from "./routes/icons";
 import express, { Express } from "express";
@@ -11,11 +12,10 @@ import userRoutes from "./routes/user";
 import reviews from "./routes/reviews";
 import orderRoutes from "./routes/order";
 import bedsRoutes from './routes/fileroutes'
-import dotenv from 'dotenv'
 import headboardRoutes from "./routes/headboard";
 
 dotenv.config({
-    path: `.env.development`,
+    path: `.env`,
     override: true
 })
 // INITIALIZING EXPREESS
