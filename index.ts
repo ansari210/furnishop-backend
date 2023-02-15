@@ -12,6 +12,7 @@ import userRoutes from "./routes/user";
 import reviews from "./routes/reviews";
 import orderRoutes from "./routes/order";
 import bedsRoutes from "./routes/fileroutes";
+import reviewsRoutes from "./routes/reviews";
 import headboardRoutes from "./routes/headboard";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
@@ -81,7 +82,7 @@ app.use("/api/icons", iconRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/headboard", headboardRoutes);
-
+app.use("/api/reviews", reviewsRoutes);
 app.use("/api/bedsMultiple", bedsRoutes);
 app.use("/api/reviews", reviews);
 

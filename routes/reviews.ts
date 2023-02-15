@@ -1,55 +1,24 @@
 import { Router } from "express";
+import {
+  approveReviewController,
+  createReviewController,
+  declineReviewController,
+  deleteReviewController,
+  getReviewsAdminController,
+  getReviewsByProductIdAdminController,
+  getReviewsByProductIdController,
+  getReviewsController,
+} from "../controllers/review-controller";
 
 const router = Router();
 
-/**
-name 
-review
-email
-rating
- */
+router.get("/", getReviewsController);
+router.post("/create", createReviewController);
+router.get("/admin", getReviewsAdminController);
+router.get("/admin/:id", getReviewsByProductIdAdminController);
+router.put("/approve/:id", approveReviewController);
+router.put("/deny/:id", declineReviewController);
+router.delete("/:id", deleteReviewController);
+router.get("/:id", getReviewsByProductIdController);
 
-// GET
-router.get('/', (req, res) => {
-    try {
-        const { name, review, email, rating } = req.body
-        res.status(200).json(req.body);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-})
-// GET BY ID
-router.get('/:id', (req, res) => {
-    try {
-        const { name, review, email, rating, id } = req.body
-        res.status(200).json(req.body);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-})
-// POST
-router.post('/', (req, res) => {
-    try {
-        const { name, review, email, rating } = req.body
-    } catch (error) {
-        res.send(error)
-    }
-})
-// UPDATE
-router.patch('/', (req, res) => {
-    try {
-        const { name, review, email, rating } = req.body
-    } catch (error) {
-        res.status(500).send(error);
-    }
-})
-// DELETE
-router.delete('/', (req, res) => {
-    try {
-        const { name, review, email, rating } = req.body
-    } catch (error) {
-        res.status(500).send(error);
-    }
-})
-
-export default router
+export default router;
