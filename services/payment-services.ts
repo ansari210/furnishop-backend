@@ -1,7 +1,7 @@
 import stripe from "stripe";
 
 const stripeClient = new stripe(
-  process.env.STRIPE_SECRET_KEY as any,
+  "sk_live_CUVyTk8BpzaPc2nUXWRNwasK002PNVOTdn",
   undefined as any
 );
 
