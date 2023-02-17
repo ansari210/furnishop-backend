@@ -1,73 +1,73 @@
 interface IOrderCancelled {
-    orderId: string;
-    orderAt: string; //Date
-    orderItems: IOrderItem[];
-    totalPrice: number;
-    shippingPrice: number;
-    billingAddress: IAddress;
-    shippingAddress: IAddress;
-    user: IUser;
-    subject: string;
-    message: string;
+  orderId: string;
+  orderAt: string; //Date
+  orderItems: IOrderItem[];
+  totalPrice: number;
+  shippingPrice: number;
+  billingAddress: IAddress;
+  shippingAddress: IAddress;
+  user: IUser;
+  subject: string;
+  message: string;
 }
 
 interface IUser {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
 }
 
 interface IAddress {
-    address: string;
-    townCity: string;
-    postalCode: string;
-    country: string;
-    companyName: string;
+  address: string;
+  townCity: string;
+  postalCode: string;
+  country: string;
+  companyName: string;
 }
 
 interface IOrderItem {
-    name: string;
-    image: string;
-    quantity: number;
-    price: number;
-    accessories: IAccessories;
+  name: string;
+  image: string;
+  quantity: number;
+  price: number;
+  accessories: IAccessories;
 }
 
 interface IAccessories {
-    size: {
-        name: string;
-    };
-    headboard: {
-        name: string;
-    };
-    mattress: {
-        name: string;
-    };
-    color: {
-        name: string;
-    };
-    storage: {
-        name: string;
-    };
-    feet: {
-        name: string;
-    };
+  size: {
+    name: string;
+  };
+  headboard: {
+    name: string;
+  };
+  mattress: {
+    name: string;
+  };
+  color: {
+    name: string;
+  };
+  storage: {
+    name: string;
+  };
+  feet: {
+    name: string;
+  };
 }
 
 export const orderStatusTemplate = ({
-    orderId,
-    orderAt,
-    orderItems,
-    totalPrice,
-    shippingPrice,
-    billingAddress,
-    shippingAddress,
-    user,
-    message,
-    subject,
+  orderId,
+  orderAt,
+  orderItems,
+  totalPrice,
+  shippingPrice,
+  billingAddress,
+  shippingAddress,
+  user,
+  message,
+  subject,
 }: IOrderCancelled) => {
-    return `
+  return `
     <!DOCTYPE html>
     <html lang="en">
       <head>
@@ -257,7 +257,7 @@ export const orderStatusTemplate = ({
                                         </thead>
                                         <tbody>
                                           ${orderItems.map((item) => {
-                                              return ` <tr>
+                                            return ` <tr>
                                             <td
                                               style="
                                                 color: #636363;
@@ -296,8 +296,8 @@ export const orderStatusTemplate = ({
                                                   >
                                                   <p style="margin: 0">
                                                     ${
-                                                        item?.accessories?.color
-                                                            ?.name || "No Color"
+                                                      item?.accessories?.color
+                                                        ?.name || "No Color"
                                                     }
                                                   </p>
                                                 </li>
@@ -317,8 +317,8 @@ export const orderStatusTemplate = ({
                                                   >
                                                   <p style="margin: 0">
                                                   ${
-                                                      item?.accessories?.size
-                                                          ?.name || "No Size"
+                                                    item?.accessories?.size
+                                                      ?.name || "No Size"
                                                   }
                                                   </p>
                                                 </li>
@@ -338,8 +338,8 @@ export const orderStatusTemplate = ({
                                                   >
                                                   <p style="margin: 0">
                                                     ${
-                                                        item?.accessories?.feet
-                                                            ?.name || "No Feet"
+                                                      item?.accessories?.feet
+                                                        ?.name || "No Feet"
                                                     }
                                                   </p>
                                                 </li>
@@ -359,9 +359,9 @@ export const orderStatusTemplate = ({
                                                   >
                                                   <p style="margin: 0">
                                                     ${
-                                                        item?.accessories
-                                                            ?.headboard?.name ||
-                                                        "No Headboard"
+                                                      item?.accessories
+                                                        ?.headboard?.name ||
+                                                      "No Headboard"
                                                     }
                                                   </p>
                                                 </li>
@@ -381,9 +381,9 @@ export const orderStatusTemplate = ({
                                                   >
                                                   <p style="margin: 0">
                                                     ${
-                                                        item?.accessories
-                                                            ?.mattress?.name ||
-                                                        "No Mattress"
+                                                      item?.accessories
+                                                        ?.mattress?.name ||
+                                                      "No Mattress"
                                                     }
                                                   </p>
                                                 </li>
@@ -416,7 +416,7 @@ export const orderStatusTemplate = ({
                                               "
                                             >
                                               <span><span>£</span>${
-                                                  item.price
+                                                item.price
                                               }</span>
                                             </td>
                                           </tr>`;
@@ -477,9 +477,9 @@ export const orderStatusTemplate = ({
                                               "
                                             >
                                               ${
-                                                  shippingPrice
-                                                      ? `<span><span>£</span>${shippingPrice}</span>`
-                                                      : "Free Shipping"
+                                                shippingPrice
+                                                  ? `<span><span>£</span>${shippingPrice}</span>`
+                                                  : "Free Shipping"
                                               }
                                             </td>
                                           </tr>
@@ -590,12 +590,12 @@ export const orderStatusTemplate = ({
                                               "
                                             >
                                               ${
-                                                  billingAddress.companyName
+                                                billingAddress.companyName
                                               }<br />${user.firstName} ${
-        user.lastName
-    }<br />${billingAddress.address}<br />${billingAddress.townCity}<br />${
-        billingAddress.postalCode
-    }<br />${billingAddress.country}<br />
+    user.lastName
+  }<br />${billingAddress.address}<br />${billingAddress.townCity}<br />${
+    billingAddress.postalCode
+  }<br />${billingAddress.country}<br />
                                               <a
                                                 href="tel:${user.phone}"
                                                 style="
@@ -648,12 +648,12 @@ export const orderStatusTemplate = ({
                                               "
                                             >
                                               ${
-                                                  shippingAddress.companyName
+                                                shippingAddress.companyName
                                               }<br />${user.firstName} ${
-        user.lastName
-    }<br />${shippingAddress.address}<br />${shippingAddress.townCity}<br />${
-        shippingAddress.postalCode
-    }<br />${shippingAddress.country}<br />
+    user.lastName
+  }<br />${shippingAddress.address}<br />${shippingAddress.townCity}<br />${
+    shippingAddress.postalCode
+  }<br />${shippingAddress.country}<br />
                                               <a
                                                 href="tel:${user.phone}"
                                                 style="
@@ -674,150 +674,6 @@ export const orderStatusTemplate = ({
                                         </tr>
                                       </tbody>
                                     </table>
-                                    <h2
-                                      style="
-                                        color: #7f54b3;
-                                        display: block;
-                                        font-family: 'Helvetica Neue', Helvetica,
-                                          Roboto, Arial, sans-serif;
-                                        font-size: 18px;
-                                        font-weight: bold;
-                                        line-height: 130%;
-                                        margin: 0 0 18px;
-                                        text-align: center;
-                                      "
-                                    >
-                                      PixelYourSite
-                                    </h2>
-                                    Your clients don't see this information! We send
-                                    it to you in this "New Order" email. If you want
-                                    to remove this data from the "New Order" email,
-                                    open
-                                    <a
-                                      href="https://www.bedsdivans.co.uk/wp-admin/admin.php?page=pixelyoursite&amp;tab=woo"
-                                      style="
-                                        color: #7f54b3;
-                                        font-weight: normal;
-                                        text-decoration: underline;
-                                      "
-                                      target="_blank"
-                                      data-saferedirecturl="https://www.google.com/url?q=https://www.bedsdivans.co.uk/wp-admin/admin.php?page%3Dpixelyoursite%26tab%3Dwoo&amp;source=gmail&amp;ust=1667981623532000&amp;usg=AOvVaw1NMeVmhIwJOuuWE3Yhut5G"
-                                      >PixelYourSite's WooCommerce page</a
-                                    >, disable "Send reports data to the New Order
-                                    email" and save. <br />With PixelYourSite
-                                    Professional, you can view and download this
-                                    data from the plugin's own reports page. Find
-                                    out how WooCommerce Reports work and how to
-                                    visualize and download your data:
-                                    <a
-                                      href="https://www.pixelyoursite.com/woocommerce-first-party-reports?utm_source=free-plugin&amp;utm_medium=order-email&amp;utm_campaign=order-email-link&amp;utm_content=woocommerce-reports&amp;utm_term=woocommerce-reports-email-link"
-                                      style="
-                                        color: #7f54b3;
-                                        font-weight: normal;
-                                        text-decoration: underline;
-                                      "
-                                      target="_blank"
-                                      data-saferedirecturl="https://www.google.com/url?q=https://www.pixelyoursite.com/woocommerce-first-party-reports?utm_source%3Dfree-plugin%26utm_medium%3Dorder-email%26utm_campaign%3Dorder-email-link%26utm_content%3Dwoocommerce-reports%26utm_term%3Dwoocommerce-reports-email-link&amp;source=gmail&amp;ust=1667981623532000&amp;usg=AOvVaw3-XMkPrNBcAn3GEIBIEU8Z"
-                                      >Click here for details</a
-                                    >.<br />
-                                    <table
-                                      style="width: 100%; text-align: left"
-                                      width="100%"
-                                    >
-                                      <tbody>
-                                        <tr>
-                                          <td colspan="2" style="padding: 12px">
-                                            <strong>FIRST VISIT</strong>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td colspan="2" style="padding: 12px">
-                                            <span
-                                              style="
-                                                border-top: 1px solid #f1f1f1;
-                                                display: block;
-                                              "
-                                            ></span>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <th style="padding: 12px">
-                                            Landing Page:
-                                          </th>
-                                          <td style="padding: 12px">
-                                            <a
-                                              style="
-                                                color: #7f54b3;
-                                                font-weight: normal;
-                                                text-decoration: underline;
-                                              "
-                                            ></a>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <th style="padding: 12px">
-                                            Traffic source:
-                                          </th>
-                                          <td style="padding: 12px"></td>
-                                        </tr>
-                                        <tr>
-                                          <td colspan="2" style="padding: 12px">
-                                            <span
-                                              style="
-                                                border-top: 1px solid #f1f1f1;
-                                                display: block;
-                                              "
-                                            ></span>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td colspan="2" style="padding: 12px">
-                                            <strong>LAST VISIT</strong>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td colspan="2" style="padding: 12px">
-                                            <span
-                                              style="
-                                                border-top: 1px solid #f1f1f1;
-                                                display: block;
-                                              "
-                                            ></span>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <th style="padding: 12px">
-                                            Landing Page:
-                                          </th>
-                                          <td style="padding: 12px">
-                                            <a
-                                              style="
-                                                color: #7f54b3;
-                                                font-weight: normal;
-                                                text-decoration: underline;
-                                              "
-                                            ></a>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <th style="padding: 12px">
-                                            Traffic source:
-                                          </th>
-                                          <td style="padding: 12px"></td>
-                                        </tr>
-                                        <tr>
-                                          <td colspan="2" style="padding: 12px">
-                                            <span
-                                              style="
-                                                border-top: 1px solid #f1f1f1;
-                                                display: block;
-                                              "
-                                            ></span>
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-    
                                     <p style="margin: 0 0 16px">
                                       Thanks for reading.
                                     </p>
