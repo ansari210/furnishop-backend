@@ -11,6 +11,10 @@ export const createCheckoutSessionService = async (
 ) => {
   try {
     const session = await stripeClient.checkout.sessions.create({
+      client_reference_id: orderId,
+      // metadata:{ //TO add additional data to the session
+      //   orderId,
+      // }
       payment_method_types: ["card"],
       line_items,
       mode: "payment",

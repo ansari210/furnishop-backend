@@ -111,7 +111,9 @@ export const orderPaymentSuccessController = async (
       "New Order Created"
     );
 
-    res.redirect(`${process.env.CLIENT_URL}/order/success`);
+    res.redirect(
+      `${process.env.CLIENT_URL}/order/success?paymentMethod=Stripe`
+    );
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }
