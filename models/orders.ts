@@ -91,7 +91,11 @@ const orderSchema = new Schema<IOrder>(
     orderNotes: { type: String, required: false },
 
     payment: {
-      paymentMethod: { type: String, required: true, enum: ["stripe", "cod"] },
+      paymentMethod: {
+        type: String,
+        required: true,
+        enum: ["stripe", "cash-on-delivery"],
+      },
       paymentResult: {
         id: { type: String },
         status: { type: String },

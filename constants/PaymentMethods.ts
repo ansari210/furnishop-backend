@@ -1,4 +1,4 @@
 export const paymentMethods = {
   stripe: "stripe",
-  cod: "cod",
+  cod: "cash-on-delivery",
 };
