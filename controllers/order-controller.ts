@@ -37,7 +37,7 @@ export const createOrderController = async (req: Request, res: Response) => {
         name: item?.name,
         images: [item?.image],
         amount: Number(item?.price || 0) * 100,
-        currency: "INR",
+        currency: "GBP",
         quantity: item?.quantity,
       };
     });
