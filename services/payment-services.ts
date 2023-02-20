@@ -5,18 +5,21 @@ const stripeClient = new stripe(
   undefined as any
 );
 
-export const createCheckoutSessionService = async (line_items: any) => {
+export const createCheckoutSessionService = async (
+  line_items: any,
+  orderId: string
+) => {
   try {
     const session = await stripeClient.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items,
       mode: "payment",
-      success_url: `${process.env.CLIENT_URL}/order/success`,
-      cancel_url: `${process.env.CLIENT_URL}/cart`,
+      success_url: `${process.env.BASE_URL}/api/order/success/${orderId}`,
+      cancel_url: `${process.env.BASE_URL}/api/order/cancel/${orderId}`,
     });
     return session;
   } catch (error: any) {
-    console.log(error);
+    throw new Error(error.message);
   }
 };
 

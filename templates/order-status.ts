@@ -9,6 +9,7 @@ interface IOrderCancelled {
   user: IUser;
   subject: string;
   message: string;
+  paymentMethod: string;
 }
 
 interface IUser {
@@ -66,6 +67,7 @@ export const orderStatusTemplate = ({
   user,
   message,
   subject,
+  paymentMethod,
 }: IOrderCancelled) => {
   return `
     <!DOCTYPE html>
@@ -506,7 +508,7 @@ export const orderStatusTemplate = ({
                                                 text-align: left;
                                               "
                                             >
-                                              Cash on delivery
+                                              ${paymentMethod}
                                             </td>
                                           </tr>
                                           <tr>

@@ -1,9 +1,13 @@
 import { Router } from "express";
-import { getMyselfController } from "../controllers/user-controller";
-import { isAuthenticated } from "../middlewares/authentication";
+import {
+  createUserController,
+  getMyselfController,
+} from "../controllers/user-controller";
+import { isAdmin, isAuthenticated } from "../middlewares/authentication";
 
 const router = Router();
 
 router.get("/", isAuthenticated, getMyselfController);
+router.post("/create", isAdmin, createUserController);
 
 export default router;
