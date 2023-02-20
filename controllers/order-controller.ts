@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { AcceptedOrderStatus, orderStatus } from "../constants/OrderStatus";
+import { paymentMethods } from "../constants/PaymentMethods";
 import { roles } from "../constants/Roles";
 import {
   sendEmailWithTemplate,
@@ -32,20 +33,25 @@ export const createOrderController = async (req: Request, res: Response) => {
       role: roles.customer,
     });
 
-    const line_items = order?.orderItems?.map((item: any) => {
-      return {
-        name: item?.name,
-        images: [item?.image],
-        amount: Number(item?.price || 0) * 100,
-        currency: "GBP",
-        quantity: item?.quantity,
-      };
-    });
-
-    const stripeCheckout = await createCheckoutSessionService(
-      line_items,
-      order._id as any
-    );
+    if (order?.payment?.paymentMethod === paymentMethods.stripe) {
+      const line_items = order?.orderItems?.map((item: any) => {
+        return {
+          name: item?.name,
+          images: [item?.image],
+          amount: Number(item?.price || 0) * 100,
+          currency: "GBP",
+          quantity: item?.quantity,
+        };
+      });
+      const stripeCheckout = await createCheckoutSessionService(
+        line_items,
+        order._id as any
+      );
+      res.status(201).json({ stripe: stripeCheckout });
+    } else {
+      await updateOrderStatusService(order._id as any, orderStatus.Processing);
+      res.status(201).json({ order });
+    }
 
     // const template = orderStatusTemplate({
     //   orderId: order?.orderId as any,
@@ -61,8 +67,6 @@ export const createOrderController = async (req: Request, res: Response) => {
     //   message: `Notification to let you know – order #${order?.orderId}
     //         belonging to <strong>${order?.user?.firstName} ${order?.user?.lastName}</strong> has been placed successfully.`,
     // });
-
-    res.status(201).json({ stripe: stripeCheckout });
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }
