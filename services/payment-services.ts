@@ -1,7 +1,7 @@
 import stripe from "stripe";
 
 const stripeClient = new stripe(
-  "sk_live_CUVyTk8BpzaPc2nUXWRNwasK002PNVOTdn",
+  "sk_test_51JXndeSCcM1FuO5Bq3FH8TTDggwtXoGMxWi4wtHtz5AbcoLwuGlxp8Nlr7j42rnXRsrwWGC0pZpDLo2lnydXPoGF00rEnGP4NL",
   undefined as any
 );
 

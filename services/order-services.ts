@@ -125,14 +125,15 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingAddress: updatedOrder?.shippingAddress as any,
       billingAddress: updatedOrder?.shippingAddress as any,
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
-      subject: "Order Processing",
-      message: `Hi ${updatedOrder?.user?.firstName}, Your order has been processed. We will send you an email when your order has been shipped. You can track your order by clicking the link below.`,
+      // order processing
+      subject: "Your Beds Divans order has been received!",
+      message: `Hi ${updatedOrder?.user?.firstName}, Thank you for placing your order with DBZ Khan LTD. @Bedsdivans.co.uk <br> We have received your order, which is currently in process with our logistics team awaiting to be scheduled on a route for delivery. <br> Our aim is to deliver your items within 3-5 working days from when you have placed the order between the hours of 7am-7pm mon-fri. <br> If your delivery address falls within the 100 mile radius of our postcode (WV14 7HZ) then your estimated delivery will be as mentioned above, (within 3-5 working days). <br> However, if your delivery address falls above the 100 mile radius of our (wv14 7hz) postcode then the estimated delivery will be between 3-7 working days with our third-party courier provider (sgk logistics) who will get in touch regarding a delivery day & time via email & text. <br> Our office staff will call/text or email you 24hrs-48hrs prior to your scheduled delivery day to confirm the time of delivery. <br> Furthermore, providing your correct contact details will speed the delivery process. <br>  If you require further assistance then please do read our policy & warranty guidelines and useful information section on our website.`,
     });
 
     await sendEmailWithTemplate(
       updatedOrder?.user?.email as any,
       template,
-      "Order Processing"
+      "Your Beds Divans order has been received!"
     );
   } else if (status === orderStatus.Completed) {
     const template = orderStatusTemplate({
