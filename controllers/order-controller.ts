@@ -45,6 +45,7 @@ export const createOrderController = async (req: Request, res: Response) => {
       });
       const stripeCheckout = await createCheckoutSessionService(
         line_items,
+        order.orderId as any,
         order._id as any
       );
       res.status(201).json({ stripe: stripeCheckout });
@@ -112,7 +113,7 @@ export const orderPaymentSuccessController = async (
     );
 
     res.redirect(
-      `${process.env.CLIENT_URL}/order/success?paymentMethod=Stripe`
+      `${process.env.CLIENT_URL}/order/success?paymentMethod=Stripe&price=${order?.totalPrice}&orderId=${order?.orderId}&createdAt=${order?.createdAt}`
     );
   } catch (error: any) {
     res.status(400).json({ error: error.message });
