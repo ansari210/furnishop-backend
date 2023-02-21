@@ -15,7 +15,7 @@ export const createCheckoutSessionService = async (
     const session = await stripeClient.checkout.sessions.create({
       client_reference_id: String(orderId),
       payment_intent_data: {
-        description: "The Order Id is #" + String(orderId),
+        description: "Beds Divans Order #" + String(orderId),
         metadata: {
           order_id: String(orderId),
         },
