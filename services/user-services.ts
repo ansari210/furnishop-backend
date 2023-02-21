@@ -14,6 +14,19 @@ export const getUserService = (userId: string) => {
   return users.findById(userId).select("-password");
 };
 
+export const getAllUsersService = (page: number, limit: number) => {
+  return users
+    .find()
+    .select("-password")
+    .sort({ createdAt: -1 })
+    .skip((page - 1) * limit)
+    .limit(limit);
+};
+
+export const getAllUsersCountService = () => {
+  return users.countDocuments();
+};
+
 export const createUserService = (user: IUser) => {
   if (!user.role) {
     throw new Error("Role is required");
