@@ -27,7 +27,7 @@ export const getAllUsersCountService = () => {
   return users.countDocuments();
 };
 
-export const createUserService = (user: IUser) => {
+export const createUserService = async (user: IUser) => {
   if (!user.role) {
     throw new Error("Role is required");
   }
@@ -35,8 +35,8 @@ export const createUserService = (user: IUser) => {
     if (!user.password) {
       throw new Error("Password is required for admin and super admin");
     }
-    const hashedPassword = bcrypt.hashSync(user.password, 10);
-    user.password = hashedPassword;
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    return users.create({ ...user, password: hashedPassword });
   }
   return users.create(user);
 };
