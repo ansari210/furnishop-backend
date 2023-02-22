@@ -2,6 +2,7 @@
 import { Router } from "express";
 
 import {
+  bulkOrderStatusUpdateController,
   createOrderController,
   deleteOrderController,
   getAllOrdersController,
@@ -24,5 +25,6 @@ router.patch("/update-status/:id", updateOrderStatusController);
 router.get("/success/:orderId", orderPaymentSuccessController);
 router.get("/cancel/:orderId", orderPaymentFailedController);
 router.post("/send-order-details", sendOrderDetaisEmailController);
+router.patch("/bulk-update", bulkOrderStatusUpdateController);
 
 export default router;

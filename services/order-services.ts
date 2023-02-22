@@ -273,3 +273,15 @@ export const updateOrderStatusService = async (id: string, status: string) => {
 
   return updatedOrder;
 };
+
+export const bulkOrderUpdateService = async (
+  ids: string[],
+  status: typeof orderStatus
+) => {
+  const orders = await Order.updateMany(
+    { _id: { $in: ids } },
+    { $set: { ["payment.status"]: status } }
+  );
+
+  return orders;
+};

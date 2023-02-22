@@ -7,6 +7,7 @@ import {
   sendOrderDetailsService,
 } from "../services/email-services";
 import {
+  bulkOrderUpdateService,
   createOrderService,
   deleteOrderService,
   getAllOrdersService,
@@ -205,6 +206,19 @@ export const sendOrderDetaisEmailController = async (
       req.body.message
     );
     res.status(200).json({ orderEmail: orderEmail });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+};
+
+export const bulkOrderStatusUpdateController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { ids, status } = req.body;
+    const updatedOrders = await bulkOrderUpdateService(ids, status);
+    res.status(200).json({ updatedOrders });
   } catch (error) {
     res.status(400).json({ error });
   }
