@@ -125,11 +125,7 @@ export const orderPaymentFailedController = async (
   res: Response
 ) => {
   try {
-    const { orderId } = req.params;
-    const order = await updateOrderStatusService(orderId, orderStatus.Failed);
-    if (!order) {
-      return res.status(400).json({ message: "Order not found" });
-    }
+    // const { orderId } = req.params;
     res.redirect(`${process.env.CLIENT_URL}/cart`);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
