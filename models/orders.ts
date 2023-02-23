@@ -53,6 +53,8 @@ export interface IOrder extends Document {
 
   updatedAt: Date;
 
+  isDeleted: boolean;
+
   __v: number;
 }
 
@@ -64,6 +66,7 @@ const orderSchema = new Schema<IOrder>(
       email: { type: String, required: true },
       phone: { type: String, required: true },
     },
+    isDeleted: { type: Boolean, default: false },
 
     orderId: { type: Number, required: false },
 
