@@ -7,6 +7,7 @@ import {
   sendOrderDetailsService,
 } from "../services/email-services";
 import {
+  bulkOrderUpdateService,
   createOrderService,
   deleteOrderService,
   getAllOrdersService,
@@ -125,11 +126,7 @@ export const orderPaymentFailedController = async (
   res: Response
 ) => {
   try {
-    const { orderId } = req.params;
-    const order = await updateOrderStatusService(orderId, orderStatus.Failed);
-    if (!order) {
-      return res.status(400).json({ message: "Order not found" });
-    }
+    // const { orderId } = req.params;
     res.redirect(`${process.env.CLIENT_URL}/cart`);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -209,6 +206,19 @@ export const sendOrderDetaisEmailController = async (
       req.body.message
     );
     res.status(200).json({ orderEmail: orderEmail });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+};
+
+export const bulkOrderStatusUpdateController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { ids, status } = req.body;
+    const updatedOrders = await bulkOrderUpdateService(ids, status);
+    res.status(200).json({ updatedOrders });
   } catch (error) {
     res.status(400).json({ error });
   }

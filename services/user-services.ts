@@ -35,6 +35,8 @@ export const createUserService = async (user: IUser) => {
     if (!user.password) {
       throw new Error("Password is required for admin and super admin");
     }
+    const findUser = await users.findOne({ email: user.email });
+    if (findUser) throw new Error("User already exists");
     const hashedPassword = await bcrypt.hash(user.password, 10);
     return users.create({ ...user, password: hashedPassword });
   }

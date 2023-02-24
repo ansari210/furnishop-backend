@@ -273,3 +273,31 @@ export const updateOrderStatusService = async (id: string, status: string) => {
 
   return updatedOrder;
 };
+
+export const bulkOrderUpdateService = async (ids: string[], status: string) => {
+  console.log({ ids, status });
+
+  if (status === orderStatus.MoveToBin) {
+    const orders = await Order.updateMany(
+      { _id: { $in: ids } },
+      {
+        $set: {
+          isDeleted: true,
+          ["payment.status"]: "",
+        },
+      }
+    );
+    return orders;
+  } else {
+    const orders = await Order.updateMany(
+      { _id: { $in: ids } },
+      {
+        $set: {
+          ["payment.status"]: status,
+          isDeleted: false,
+        },
+      }
+    );
+    return orders;
+  }
+};
