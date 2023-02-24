@@ -22,7 +22,7 @@ const userSchema = new Schema<IUser>(
     },
     phone: {
       type: String,
-      required: true,
+      required: false,
       unique: false,
     },
     password: {
