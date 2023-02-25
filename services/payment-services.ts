@@ -5,18 +5,30 @@ const stripeClient = new stripe(
   undefined as any
 );
 
-export const createCheckoutSessionService = async (line_items: any) => {
+export const createCheckoutSessionService = async (
+  line_items: any,
+  orderId: string,
+  mongoObjectId: string
+) => {
   try {
+    if (!orderId) throw new Error("OrderId not found");
     const session = await stripeClient.checkout.sessions.create({
+      client_reference_id: String(orderId),
+      payment_intent_data: {
+        description: "Beds Divans Order #" + String(orderId),
+        metadata: {
+          order_id: String(orderId),
+        },
+      },
       payment_method_types: ["card"],
       line_items,
       mode: "payment",
-      success_url: `${process.env.CLIENT_URL}/order/success`,
-      cancel_url: `${process.env.CLIENT_URL}/cart`,
+      success_url: `${process.env.BASE_URL}/api/order/success/${mongoObjectId}`,
+      cancel_url: `${process.env.BASE_URL}/api/order/cancel/${mongoObjectId}`,
     });
     return session;
   } catch (error: any) {
-    console.log(error);
+    throw new Error(error.message);
   }
 };
 

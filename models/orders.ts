@@ -53,12 +53,13 @@ export interface IOrder extends Document {
 
   updatedAt: Date;
 
-  __v: number;
-
   notes: {
     content: string;
   }[];
   adminImage: string;
+  isDeleted: boolean;
+
+  __v: number;
 }
 
 const orderSchema = new Schema<IOrder>(
@@ -69,6 +70,7 @@ const orderSchema = new Schema<IOrder>(
       email: { type: String, required: true },
       phone: { type: String, required: true },
     },
+    isDeleted: { type: Boolean, default: false },
 
     orderId: { type: Number, required: false },
 
@@ -96,14 +98,18 @@ const orderSchema = new Schema<IOrder>(
     orderNotes: { type: String, required: false },
 
     payment: {
-      paymentMethod: { type: String, required: true },
+      paymentMethod: {
+        type: String,
+        required: true,
+        enum: ["stripe", "cash-on-delivery"],
+      },
       paymentResult: {
         id: { type: String },
         status: { type: String },
         update_time: { type: String },
         email_address: { type: String },
       },
-      status: { type: String, required: true, default: "PROCESSING" },
+      status: { type: String, required: true, default: "PENDING_PAYMENT" },
     },
 
     isDelivered: {
