@@ -60,6 +60,12 @@ export interface IOrder extends Document {
   isDeleted: boolean;
 
   __v: number;
+
+  discount: {
+    price: number;
+    percent: number;
+    code: string;
+  };
 }
 
 const orderSchema = new Schema<IOrder>(
@@ -86,6 +92,12 @@ const orderSchema = new Schema<IOrder>(
     ],
 
     totalPrice: { type: Number, required: true },
+
+    discount: {
+      price: { type: Number, required: false },
+      percent: { type: Number, required: false },
+      code: { type: String, required: false },
+    },
 
     shippingAddress: {
       address: { type: String, required: false },

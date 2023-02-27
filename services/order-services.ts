@@ -1,16 +1,20 @@
 import { orderStatus } from "../constants/OrderStatus";
 import Order from "../models/orders";
 import { orderStatusTemplate } from "../templates/order-status";
+import { getPercentagePrice } from "../utils/GetDiscountPrice";
 import {
   findAccessoriesLocallyService,
   findBedVariantWithProductNameByIdService,
 } from "./accessories-services";
+import { getCouponByIdService } from "./coupon-services";
 import { sendEmailWithTemplate } from "./email-services";
 import { resizeImageAndUpload } from "./image-service";
 
 //create order
 export const createOrderService = async (order: any) => {
   if (order?.orderItems && order?.orderItems?.length > 0) {
+    const coupon = await getCouponByIdService(order?.couponId);
+
     const test = order.orderItems.map(async (orderItem: any) => {
       const bedVariantWithProductName =
         await findBedVariantWithProductNameByIdService(
@@ -54,6 +58,16 @@ export const createOrderService = async (order: any) => {
       (acc: any, item: any) => acc + item.price,
       0
     );
+
+    if (coupon) {
+      order.discount = {
+        price:
+          (order.totalPrice || 0) -
+          getPercentagePrice(order.totalPrice || 0, coupon?.percent || 0),
+        percent: coupon?.percent,
+        code: coupon?.label,
+      };
+    }
 
     const newOrder = await Order.create(order);
     return newOrder;

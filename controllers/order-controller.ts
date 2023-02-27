@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { it } from "node:test";
 import { AcceptedOrderStatus, orderStatus } from "../constants/OrderStatus";
 import { paymentMethods } from "../constants/PaymentMethods";
 import { roles } from "../constants/Roles";
@@ -34,12 +35,14 @@ export const createOrderController = async (req: Request, res: Response) => {
       role: roles.customer,
     });
 
+    console.log({ order: order?.orderItems });
+
     if (order?.payment?.paymentMethod === paymentMethods.stripe) {
       const line_items = order?.orderItems?.map((item: any) => {
         return {
           name: item?.name,
           images: [item?.image],
-          amount: Number(item?.price || 0) * 100,
+          amount: Number((item?.price || 0) / (item?.quantity || 0)) * 100,
           currency: "GBP",
           quantity: item?.quantity,
         };
@@ -47,7 +50,8 @@ export const createOrderController = async (req: Request, res: Response) => {
       const stripeCheckout = await createCheckoutSessionService(
         line_items,
         order.orderId as any,
-        order._id as any
+        order._id as any,
+        req.body?.couponId || ""
       );
       res.status(201).json({ stripe: stripeCheckout });
     } else {

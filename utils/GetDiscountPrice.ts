@@ -16,3 +16,7 @@ export const getDiscountCouponPrice = ({
     return price - discountAmount;
   }
 };
+
+export const getPercentagePrice = (total: number, discountPct: number) => {
+  return (total * discountPct) / 100;
+};
