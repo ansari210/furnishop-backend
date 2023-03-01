@@ -117,7 +117,6 @@ io.on("connection", (socket: Socket) => {
 
   socket.on("active-order", async (orderId) => {
     if (!orderId) return;
-
     const findAlreadyActiveUser = await findActiveUserByOrderId(
       activeUsers,
       orderId

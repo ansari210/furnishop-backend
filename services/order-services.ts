@@ -61,9 +61,7 @@ export const createOrderService = async (order: any) => {
 
     if (coupon) {
       order.discount = {
-        price:
-          (order.totalPrice || 0) -
-          getPercentagePrice(order.totalPrice || 0, coupon?.percent || 0),
+        price: getPercentagePrice(order.totalPrice, coupon?.percent),
         percent: coupon?.percent,
         code: coupon?.label,
       };

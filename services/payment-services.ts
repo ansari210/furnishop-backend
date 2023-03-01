@@ -3,11 +3,37 @@ import axios from "axios";
 import { getCouponByIdService } from "./coupon-services";
 import { getDiscountCouponPrice } from "../utils/GetDiscountPrice";
 
-const stripeClient = new stripe(
-  "sk_live_CUVyTk8BpzaPc2nUXWRNwasK002PNVOTdn",
-  undefined as any
-);
+//INITIALIZATION AND CONFIGURATION
+const PRODUCTION_MODE = false;
 
+const STRIPE_SECRET_KEY = (
+  PRODUCTION_MODE
+    ? "sk_live_CUVyTk8BpzaPc2nUXWRNwasK002PNVOTdn"
+    : "sk_test_51JXndeSCcM1FuO5Bq3FH8TTDggwtXoGMxWi4wtHtz5AbcoLwuGlxp8Nlr7j42rnXRsrwWGC0pZpDLo2lnydXPoGF00rEnGP4NL"
+) as string;
+
+const KLARNA_URL = PRODUCTION_MODE
+  ? "https://api.klarna.com"
+  : "https://api.playground.klarna.com";
+
+const KLARNA_USERNAME = PRODUCTION_MODE
+  ? "K1091283_c00586368e18"
+  : "PK70159_db1dd6c92247";
+
+const KLARNA_PASSWORD = PRODUCTION_MODE
+  ? "bZnO1gzxCa6qFJvu"
+  : "UX4sVGUG9y78EvvF";
+
+console.log({
+  STRIPE_SECRET_KEY,
+  KLARNA_URL,
+  KLARNA_USERNAME,
+  KLARNA_PASSWORD,
+});
+
+const stripeClient = new stripe(STRIPE_SECRET_KEY, undefined as any);
+
+//SERVICE FUNCTIONS
 export const createCheckoutSessionService = async (
   line_items: any,
   orderId: string,
@@ -79,13 +105,13 @@ export const createCheckoutSessionService = async (
 // };
 
 export const createKlarnaSessionService = async (orderInfo: any) => {
-  const klarnaSessionEndpoint =
-    "https://api-na.playground.klarna.com/payments/v1/sessions";
+  const klarnaSessionEndpoint = `${KLARNA_URL}/payments/v1/sessions`;
+  console.log({ KLARNA_USERNAME, KLARNA_PASSWORD });
   try {
     const createSession = await axios.post(klarnaSessionEndpoint, orderInfo, {
       auth: {
-        username: process.env.KLARNA_USERNAME || "",
-        password: process.env.KLARNA_PASSWORD || "",
+        username: KLARNA_USERNAME || "",
+        password: KLARNA_PASSWORD || "",
       },
       headers: {
         "Content-Type": "application/json",
@@ -95,7 +121,8 @@ export const createKlarnaSessionService = async (orderInfo: any) => {
     console.log(createSession.data);
     return createSession.data;
   } catch (error: any) {
-    throw new Error(error?.message);
+    console.log(error?.response?.data?.error_messages);
+    throw new Error(error);
   }
 };
 
@@ -103,7 +130,7 @@ export const klarnaPlaceOrderService = async (
   orderInfo: any,
   authorization_token: string
 ) => {
-  const klarnaPlaceOrderEndpoint = `https://api-na.playground.klarna.com/payments/v1/authorizations/${authorization_token}/order`;
+  const klarnaPlaceOrderEndpoint = `${KLARNA_URL}/payments/v1/authorizations/${authorization_token}/order`;
   try {
     const placeOrder = await axios.post(klarnaPlaceOrderEndpoint, orderInfo, {
       auth: {

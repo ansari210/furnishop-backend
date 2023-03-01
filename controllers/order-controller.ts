@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { it } from "node:test";
 import { AcceptedOrderStatus, orderStatus } from "../constants/OrderStatus";
 import { paymentMethods } from "../constants/PaymentMethods";
 import { roles } from "../constants/Roles";
@@ -16,9 +15,13 @@ import {
   updateOrderService,
   updateOrderStatusService,
 } from "../services/order-services";
-import { createCheckoutSessionService } from "../services/payment-services";
+import {
+  createCheckoutSessionService,
+  createKlarnaSessionService,
+} from "../services/payment-services";
 import { createUserService } from "../services/user-services";
 import { orderStatusTemplate } from "../templates/order-status";
+import createKlarnaPayload from "../utils/CreateKlarnaPayload";
 
 //create order controller
 export const createOrderController = async (req: Request, res: Response) => {
@@ -34,8 +37,6 @@ export const createOrderController = async (req: Request, res: Response) => {
       email: order?.user?.email || "",
       role: roles.customer,
     });
-
-    console.log({ order: order?.orderItems });
 
     if (order?.payment?.paymentMethod === paymentMethods.stripe) {
       const line_items = order?.orderItems?.map((item: any) => {
@@ -54,6 +55,11 @@ export const createOrderController = async (req: Request, res: Response) => {
         req.body?.couponId || ""
       );
       res.status(201).json({ stripe: stripeCheckout });
+    } else if (order?.payment?.paymentMethod === paymentMethods.klarna) {
+      //KLARNA PAYMENT
+      const klarnaPayload = await createKlarnaPayload(order);
+      const session = await createKlarnaSessionService(klarnaPayload);
+      res.status(201).json({ session });
     } else {
       await updateOrderStatusService(order._id as any, orderStatus.Processing);
       res.status(201).json({ order });
