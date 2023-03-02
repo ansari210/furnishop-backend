@@ -5,7 +5,7 @@ import { getDiscountCouponPrice } from "../utils/GetDiscountPrice";
 import createKlarnaPayload from "../utils/CreateKlarnaPayload";
 
 //INITIALIZATION AND CONFIGURATION
-const PRODUCTION_MODE = false;
+const PRODUCTION_MODE = true;
 
 const STRIPE_SECRET_KEY = (
   PRODUCTION_MODE
