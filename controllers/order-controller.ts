@@ -30,14 +30,12 @@ export const createOrderController = async (req: Request, res: Response) => {
     if (!order) {
       return res.status(400).json({ message: "Order not found" });
     }
-
     await createUserService({
       name: `${order?.user?.firstName} ${order?.user?.lastName}`,
       phone: order?.user?.phone || "",
       email: order?.user?.email || "",
       role: roles.customer,
     });
-
     if (order?.payment?.paymentMethod === paymentMethods.stripe) {
       const line_items = order?.orderItems?.map((item: any) => {
         return {
@@ -56,10 +54,11 @@ export const createOrderController = async (req: Request, res: Response) => {
       );
       res.status(201).json({ stripe: stripeCheckout });
     } else if (order?.payment?.paymentMethod === paymentMethods.klarna) {
-      //KLARNA PAYMENT
       const klarnaPayload = await createKlarnaPayload(order);
+      console.log({ klarnaPayload });
       const session = await createKlarnaSessionService(klarnaPayload);
-      res.status(201).json({ session });
+
+      res.status(201).json({ session, order });
     } else {
       await updateOrderStatusService(order._id as any, orderStatus.Processing);
       res.status(201).json({ order });

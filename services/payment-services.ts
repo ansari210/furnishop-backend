@@ -2,6 +2,7 @@ import stripe from "stripe";
 import axios from "axios";
 import { getCouponByIdService } from "./coupon-services";
 import { getDiscountCouponPrice } from "../utils/GetDiscountPrice";
+import createKlarnaPayload from "../utils/CreateKlarnaPayload";
 
 //INITIALIZATION AND CONFIGURATION
 const PRODUCTION_MODE = false;
@@ -93,17 +94,6 @@ export const createCheckoutSessionService = async (
   }
 };
 
-// export const createCheckoutSessionService = async ({ amount, id }: any) => {
-//     const payment = await stripeClient.paymentIntents.create({
-//         amount: amount,
-//         currency: "USD",
-//         description: "Your Company Description",
-//         payment_method: id,
-//         confirm: true,
-//     });
-//     return payment;
-// };
-
 export const createKlarnaSessionService = async (orderInfo: any) => {
   const klarnaSessionEndpoint = `${KLARNA_URL}/payments/v1/sessions`;
   console.log({ KLARNA_USERNAME, KLARNA_PASSWORD });
@@ -130,12 +120,13 @@ export const klarnaPlaceOrderService = async (
   orderInfo: any,
   authorization_token: string
 ) => {
+  const orderItems = await createKlarnaPayload(orderInfo);
   const klarnaPlaceOrderEndpoint = `${KLARNA_URL}/payments/v1/authorizations/${authorization_token}/order`;
   try {
-    const placeOrder = await axios.post(klarnaPlaceOrderEndpoint, orderInfo, {
+    const placeOrder = await axios.post(klarnaPlaceOrderEndpoint, orderItems, {
       auth: {
-        username: process.env.KLARNA_USERNAME || "",
-        password: process.env.KLARNA_PASSWORD || "",
+        username: KLARNA_USERNAME || "",
+        password: KLARNA_PASSWORD || "",
       },
       headers: {
         "Content-Type": "application/json",

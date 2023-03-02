@@ -20,3 +20,7 @@ export const getDiscountCouponPrice = ({
 export const getPercentagePrice = (total: number, discountPct: number) => {
   return (total || 0) - ((total || 0) * (discountPct || 0)) / 100;
 };
+
+export const getDiscountPrice = (total: number, discountPct: number) => {
+  return ((total || 0) * (discountPct || 0)) / 100;
+};

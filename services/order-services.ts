@@ -72,6 +72,66 @@ export const createOrderService = async (order: any) => {
   }
 };
 
+export const getOrderByIdsService = async (order: any) => {
+  if (order?.orderItems && order?.orderItems?.length > 0) {
+    const coupon = await getCouponByIdService(order?.couponId);
+
+    const test = order.orderItems.map(async (orderItem: any) => {
+      const bedVariantWithProductName =
+        await findBedVariantWithProductNameByIdService(
+          orderItem?.bedId,
+          orderItem._id
+        );
+
+      if (bedVariantWithProductName) {
+        const data = findAccessoriesLocallyService(
+          bedVariantWithProductName as any,
+          orderItem?.headboard,
+          orderItem?.feet,
+          orderItem?.mattress,
+          orderItem?.color,
+          orderItem?.storage
+        );
+
+        console.log({ total: data?.totalPrice });
+
+        return {
+          name: data?.name,
+          categories: data?.categories,
+          image: data?.variant?.image,
+          quantity: orderItem?.quantity,
+          price: data?.totalPrice * Number(orderItem?.quantity),
+          accessories: {
+            size: data?.size,
+            headboard: data?.headboard,
+            mattress: data?.mattress,
+            color: data?.color,
+            storage: data?.storage,
+            feet: data?.feet,
+          },
+        };
+      }
+    });
+
+    order.orderItems = await Promise.all(test);
+
+    order.totalPrice = order.orderItems.reduce(
+      (acc: any, item: any) => acc + item.price,
+      0
+    );
+
+    if (coupon) {
+      order.discount = {
+        price: getPercentagePrice(order.totalPrice, coupon?.percent),
+        percent: coupon?.percent,
+        code: coupon?.label,
+      };
+    }
+
+    return order;
+  }
+};
+
 //get order by id
 export const getOrderByIdService = async (id: string) => {
   const order = await Order.findById(id);
