@@ -113,7 +113,7 @@ const orderSchema = new Schema<IOrder>(
       paymentMethod: {
         type: String,
         required: true,
-        enum: ["stripe", "cash-on-delivery", "klarna"],
+        enum: ["stripe", "cash-on-delivery", "klarna", "clearpay", "amazonpay"],
       },
       paymentResult: {
         id: { type: String },

@@ -1,4 +1,3 @@
-import { getCouponByIdService } from "../services/coupon-services";
 import { getDiscountPrice, getPercentagePrice } from "./GetDiscountPrice";
 
 export default async function createKlarnaPayload(order: any) {

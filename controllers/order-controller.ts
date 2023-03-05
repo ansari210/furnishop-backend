@@ -16,11 +16,13 @@ import {
   updateOrderStatusService,
 } from "../services/order-services";
 import {
+  clearPayCreateSessionService,
   createCheckoutSessionService,
   createKlarnaSessionService,
 } from "../services/payment-services";
 import { createUserService } from "../services/user-services";
 import { orderStatusTemplate } from "../templates/order-status";
+import createAfterPayPayload from "../utils/CreateAfterPayPayload";
 import createKlarnaPayload from "../utils/CreateKlarnaPayload";
 
 //create order controller
@@ -54,9 +56,16 @@ export const createOrderController = async (req: Request, res: Response) => {
       );
       res.status(201).json({ stripe: stripeCheckout });
     } else if (order?.payment?.paymentMethod === paymentMethods.klarna) {
+      //KLARNA PAYMENT
       const klarnaPayload = await createKlarnaPayload(order);
       console.log({ klarnaPayload });
       const session = await createKlarnaSessionService(klarnaPayload);
+      res.status(201).json({ session, order });
+    } else if (order?.payment?.paymentMethod === paymentMethods.clearPay) {
+      //CLEARPAY PAYMENT
+      const clearPayPayload = await createAfterPayPayload(order);
+      console.log({ clearPayPayload });
+      const session = await clearPayCreateSessionService(clearPayPayload);
 
       res.status(201).json({ session, order });
     } else {
