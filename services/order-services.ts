@@ -142,7 +142,13 @@ export const getOrderByIdService = async (id: string) => {
 };
 
 //get all orders
-export const getAllOrdersService = async () => {
+export const getAllOrdersService = async (query: string | undefined) => {
+  if (query) {
+    const orders = await Order.find({
+      $or: [{ orderId: query }, { user: query }],
+    }).sort("-createdAt");
+    return orders;
+  }
   const orders = await Order.find().sort("-createdAt");
   return orders;
 };
@@ -384,4 +390,8 @@ export const bulkOrderUpdateService = async (ids: string[], status: string) => {
     );
     return orders;
   }
+};
+
+export const findOrderByOrderIdService = async (id: string) => {
+  return await Order.find({ orderId: id });
 };

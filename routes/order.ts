@@ -5,6 +5,7 @@ import {
   bulkOrderStatusUpdateController,
   createOrderController,
   deleteOrderController,
+  findOrderByOrderIdController,
   getAllOrdersController,
   getOrderByIdController,
   orderPaymentFailedController,
@@ -27,5 +28,6 @@ router.get("/success/:orderId", orderPaymentSuccessController);
 router.get("/cancel/:orderId", orderPaymentFailedController);
 router.post("/send-order-details", sendOrderDetaisEmailController);
 router.patch("/bulk-update", bulkOrderStatusUpdateController);
+router.get("/search/:orderId", findOrderByOrderIdController);
 
 export default router;

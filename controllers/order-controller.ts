@@ -10,6 +10,7 @@ import {
   bulkOrderUpdateService,
   createOrderService,
   deleteOrderService,
+  findOrderByOrderIdService,
   getAllOrdersService,
   getOrderByIdService,
   updateOrderService,
@@ -164,7 +165,7 @@ export const getOrderByIdController = async (req: Request, res: Response) => {
 //get all orders controller
 export const getAllOrdersController = async (req: Request, res: Response) => {
   try {
-    const orders = await getAllOrdersService();
+    const orders = await getAllOrdersService(req?.query?.id as any);
     res.status(200).json({ orders });
   } catch (error) {
     res.status(400).json({ error });
@@ -249,6 +250,19 @@ export const bulkOrderStatusUpdateController = async (
     const { ids, status } = req.body;
     const updatedOrders = await bulkOrderUpdateService(ids, status);
     res.status(200).json({ updatedOrders });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+};
+
+export const findOrderByOrderIdController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { orderId } = req.params;
+    const order = await findOrderByOrderIdService(orderId);
+    res.status(200).json({ order });
   } catch (error) {
     res.status(400).json({ error });
   }
