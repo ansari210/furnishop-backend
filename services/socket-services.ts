@@ -28,7 +28,7 @@ export const updateUserOrderIdBySocketId = async (
   activeUsers: IActiveUser[],
   socketId: string,
   orderId: string,
-  name: string
+  name?: string
 ) => {
   const activeUser = await getActiveUserBySocketId(activeUsers, socketId);
   if (activeUser) {

@@ -187,10 +187,10 @@ export const amazonPayCreateSessionService = async (orderInfo: any) => {
     "x-amz-pay-idempotency-key": uuidv4().toString().replace(/-/g, ""),
   };
 
-  const testPayClient = new Client.WebStoreClient(config);
+  // const testPayClient = new Client.WebStoreClient(config);
 
-  testPayClient.createCheckoutSession(payload, headers).then((data) => {
-    console.log({ data });
-    return data;
-  });
+  // testPayClient.createCheckoutSession(payload, headers).then((data) => {
+  //   console.log({ data });
+  //   return data;
+  // });
 };
