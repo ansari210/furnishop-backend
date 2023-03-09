@@ -134,7 +134,10 @@ export const getOrderByIdsService = async (order: any) => {
 
 //get order by id
 export const getOrderByIdService = async (id: string) => {
-  const order = await Order.findById(id);
+  const order = await Order.findById(id).populate(
+    "lastModifiedBy",
+    "name email"
+  );
   return order;
 };
 
@@ -145,10 +148,18 @@ export const getAllOrdersService = async () => {
 };
 
 //update order
-export const updateOrderService = async (id: string, order: any) => {
-  const updatedOrder = await Order.findByIdAndUpdate(id, order, {
-    new: true,
-  });
+export const updateOrderService = async (
+  id: string,
+  order: any,
+  lastModifiedBy: string
+) => {
+  const updatedOrder = await Order.findByIdAndUpdate(
+    id,
+    { ...order, lastModifiedBy },
+    {
+      new: true,
+    }
+  );
   return updatedOrder;
 };
 

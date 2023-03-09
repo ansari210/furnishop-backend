@@ -115,7 +115,7 @@ io.on("connection", (socket: Socket) => {
     io.emit("test", findActiveUser);
   });
 
-  socket.on("active-order", async (orderId) => {
+  socket.on("active-order", async (orderId, name) => {
     if (!orderId) return;
     const findAlreadyActiveUser = await findActiveUserByOrderId(
       activeUsers,
@@ -123,10 +123,13 @@ io.on("connection", (socket: Socket) => {
     );
 
     if (!findAlreadyActiveUser) {
-      await updateUserOrderIdBySocketId(activeUsers, socket.id, orderId);
+      await updateUserOrderIdBySocketId(activeUsers, socket.id, orderId, name);
     }
 
+    console.log({ name, test: findAlreadyActiveUser?.name, orderId });
+
     socket.emit("is-order-accessible", {
+      name: findAlreadyActiveUser?.name,
       access: findAlreadyActiveUser ? false : true,
     });
   });

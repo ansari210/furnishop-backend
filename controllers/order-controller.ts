@@ -174,7 +174,19 @@ export const getAllOrdersController = async (req: Request, res: Response) => {
 //update order controller
 export const updateOrderController = async (req: Request, res: Response) => {
   try {
-    const order = await updateOrderService(req.params.id, req.body);
+    const { id: lastModifiedBy } = req.user;
+
+    req.body?.notes?.map((note: any) => {
+      if (!note?.createdBy) {
+        note.createdBy = req?.user?.name;
+      }
+    });
+
+    const order = await updateOrderService(
+      req.params.id,
+      req.body,
+      lastModifiedBy
+    );
     res.status(200).json({ order });
   } catch (error: any) {
     res.status(400).json({ error: error?.message });

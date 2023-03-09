@@ -11,6 +11,7 @@ declare namespace Express {
 interface IActiveUser {
   socketId: string;
   orderId?: string;
+  name?: string;
 }
 
 declare module "@amazonpay/amazon-pay-api-sdk-nodejs" {

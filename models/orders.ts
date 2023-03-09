@@ -66,6 +66,7 @@ export interface IOrder extends Document {
     percent: number;
     code: string;
   };
+  lastModifiedBy: any;
 }
 
 const orderSchema = new Schema<IOrder>(
@@ -138,8 +139,21 @@ const orderSchema = new Schema<IOrder>(
         content: {
           type: String,
         },
+        createdBy: {
+          type: String,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
       },
     ],
+
+    lastModifiedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "users",
+    },
+
     adminImage: {
       type: String,
     },

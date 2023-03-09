@@ -13,13 +13,14 @@ import {
   updateOrderController,
   updateOrderStatusController,
 } from "../controllers/order-controller";
+import { isAdmin } from "../middlewares/authentication";
 
 const router = Router();
 
 router.post("/", createOrderController);
 router.get("/", getAllOrdersController);
 router.get("/:id", getOrderByIdController);
-router.put("/:id", updateOrderController);
+router.put("/:id", isAdmin, updateOrderController);
 router.delete("/:id", deleteOrderController);
 router.patch("/update-status/:id", updateOrderStatusController);
 router.get("/success/:orderId", orderPaymentSuccessController);
