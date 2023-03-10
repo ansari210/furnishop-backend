@@ -119,7 +119,8 @@ export const orderPaymentSuccessController = async (
       shippingPrice: 0,
       user: order?.user as any,
       shippingAddress: order?.shippingAddress as any,
-      billingAddress: order?.shippingAddress as any,
+      billingAddress:
+        (order?.billingAddress as any) || (order?.shippingAddress as any),
       paymentMethod: order?.payment?.paymentMethod as any,
       subject: "New Order Created",
       message: `Notification to let you know – order #${order?.orderId}

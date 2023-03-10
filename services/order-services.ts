@@ -192,7 +192,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Cancelled",
       message: `Notification to let you know – order #${updatedOrder?.orderId}
@@ -213,7 +215,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       // order processing
       subject: "Your Beds Divans order has been received!",
@@ -234,7 +238,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.shippingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Completed",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order has been payment has been completed. Thank you for shopping with us. We will send you an email when your order has been shipped. You can track your order by clicking the link below.`,
@@ -254,7 +260,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Delivered",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order has been delivered. Thank you for shopping with us.`,
@@ -268,7 +276,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Payment Pending",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order has been payment has been pending. Please pay to complete your order.`,
@@ -288,7 +298,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Refunded",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order money has been refunded to your account , Thank you for shopping with us.`,
@@ -308,7 +320,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order On Hold",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order has been placed on hold, due to some payment issues. Please contact us for more details.`,
@@ -328,7 +342,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Payment Failed",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order payment has been failed, Please try again.`,
@@ -348,7 +364,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Pending",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order has been placed on pending, Please contact us for more details.`,
