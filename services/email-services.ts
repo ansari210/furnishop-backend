@@ -87,7 +87,8 @@ export const sendOrderDetailsService = async (
     shippingPrice: 0,
     user: findOrder?.user as any,
     shippingAddress: findOrder?.shippingAddress as any,
-    billingAddress: findOrder?.shippingAddress as any,
+    billingAddress:
+      (findOrder?.billingAddress as any) || (findOrder?.shippingAddress as any),
     paymentMethod: findOrder?.payment?.paymentMethod as any,
     // order processing
     subject: "Your Beds Divans order has been received!",
