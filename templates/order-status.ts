@@ -676,9 +676,7 @@ export const orderStatusTemplate = ({
                                         </tr>
                                       </tbody>
                                     </table>
-                                    <p style="margin: 0 0 16px">
-                                      Thanks for reading.
-                                    </p>
+                                    
                                   </div>
                                 </td>
                               </tr>
