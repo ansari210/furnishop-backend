@@ -174,13 +174,29 @@ export const amazonPayCreateSessionService = async (orderInfo: any) => {
     },
     storeId: "amzn1.application-oa2-client.78a09ba05239471a938c8cb9a83d08c4",
 
-    chargeAmount: {
-      amount: "2000",
-      currencyCode: "GBP",
+    checkoutSessionId: uuidv4().toString().replace(/-/g, ""),
+    paymentDetails: {
+      paymentIntent: "Confirm",
+      canHandlePendingAuthorization: false,
+      chargeAmount: {
+        amount: 50,
+        currencyCode: "GBP",
+      },
     },
     merchantMetadata: {
-      merchantReferenceId: "123",
+      merchantReferenceId: uuidv4().toString().replace(/-/g, ""),
+      merchantStoreName: "AmazonTestStoreFront",
+      noteToBuyer: "merchantNoteForBuyer",
+      customInformation: "",
     },
+
+    // chargeAmount: {
+    //   amount: "2000",
+    //   currencyCode: "GBP",
+    // },
+    // merchantMetadata: {
+    //   merchantReferenceId: "123",
+    // },
   };
 
   const headers = {
@@ -189,8 +205,14 @@ export const amazonPayCreateSessionService = async (orderInfo: any) => {
 
   // const testPayClient = new Client.WebStoreClient(config);
 
-  // testPayClient.createCheckoutSession(payload, headers).then((data) => {
-  //   console.log({ data });
-  //   return data;
-  // });
+  // return testPayClient
+  //   .createCheckoutSession(payload, headers)
+  //   .then(({ data ) => {
+  //     console.log({ data });
+  //     return data;
+  //   }).catch((error) => {
+  //     console.log({ error:error.response.data });
+  //     throw new Error(error);
+  //   }
+  // );
 };

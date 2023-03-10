@@ -33,6 +33,14 @@ export interface IOrder extends Document {
     companyName: string;
   };
 
+  billingAddress: {
+    address: string;
+    townCity: string;
+    postalCode: string;
+    country: string;
+    companyName: string;
+  };
+
   orderNotes: string;
 
   payment: {
@@ -108,8 +116,15 @@ const orderSchema = new Schema<IOrder>(
       companyName: { type: String, required: false },
     },
 
-    orderNotes: { type: String, required: false },
+    billingAddress: {
+      address: { type: String, required: false },
+      townCity: { type: String, required: false },
+      postalCode: { type: String, required: false },
+      country: { type: String, required: false },
+      companyName: { type: String, required: false },
+    },
 
+    orderNotes: { type: String, required: false },
     payment: {
       paymentMethod: {
         type: String,
