@@ -1,7 +1,6 @@
 import stripe from "stripe";
 import axios from "axios";
 import { getCouponByIdService } from "./coupon-services";
-import { getDiscountCouponPrice } from "../utils/GetDiscountPrice";
 
 //INITIALIZATION AND CONFIGURATION
 const PRODUCTION_MODE = false;
@@ -23,13 +22,6 @@ const KLARNA_USERNAME = PRODUCTION_MODE
 const KLARNA_PASSWORD = PRODUCTION_MODE
   ? "bZnO1gzxCa6qFJvu"
   : "UX4sVGUG9y78EvvF";
-
-console.log({
-  STRIPE_SECRET_KEY,
-  KLARNA_URL,
-  KLARNA_USERNAME,
-  KLARNA_PASSWORD,
-});
 
 const stripeClient = new stripe(STRIPE_SECRET_KEY, undefined as any);
 
