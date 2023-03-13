@@ -72,23 +72,100 @@ export const createOrderService = async (order: any) => {
   }
 };
 
+export const getOrderByIdsService = async (order: any) => {
+  if (order?.orderItems && order?.orderItems?.length > 0) {
+    const coupon = await getCouponByIdService(order?.couponId);
+
+    const test = order.orderItems.map(async (orderItem: any) => {
+      const bedVariantWithProductName =
+        await findBedVariantWithProductNameByIdService(
+          orderItem?.bedId,
+          orderItem._id
+        );
+
+      if (bedVariantWithProductName) {
+        const data = findAccessoriesLocallyService(
+          bedVariantWithProductName as any,
+          orderItem?.headboard,
+          orderItem?.feet,
+          orderItem?.mattress,
+          orderItem?.color,
+          orderItem?.storage
+        );
+
+        console.log({ total: data?.totalPrice });
+
+        return {
+          name: data?.name,
+          categories: data?.categories,
+          image: data?.variant?.image,
+          quantity: orderItem?.quantity,
+          price: data?.totalPrice * Number(orderItem?.quantity),
+          accessories: {
+            size: data?.size,
+            headboard: data?.headboard,
+            mattress: data?.mattress,
+            color: data?.color,
+            storage: data?.storage,
+            feet: data?.feet,
+          },
+        };
+      }
+    });
+
+    order.orderItems = await Promise.all(test);
+
+    order.totalPrice = order.orderItems.reduce(
+      (acc: any, item: any) => acc + item.price,
+      0
+    );
+
+    if (coupon) {
+      order.discount = {
+        price: getPercentagePrice(order.totalPrice, coupon?.percent),
+        percent: coupon?.percent,
+        code: coupon?.label,
+      };
+    }
+
+    return order;
+  }
+};
+
 //get order by id
 export const getOrderByIdService = async (id: string) => {
-  const order = await Order.findById(id);
+  const order = await Order.findById(id).populate(
+    "lastModifiedBy",
+    "name email"
+  );
   return order;
 };
 
 //get all orders
-export const getAllOrdersService = async () => {
+export const getAllOrdersService = async (query: string | undefined) => {
+  if (query) {
+    const orders = await Order.find({
+      $or: [{ orderId: query }, { user: query }],
+    }).sort("-createdAt");
+    return orders;
+  }
   const orders = await Order.find().sort("-createdAt");
   return orders;
 };
 
 //update order
-export const updateOrderService = async (id: string, order: any) => {
-  const updatedOrder = await Order.findByIdAndUpdate(id, order, {
-    new: true,
-  });
+export const updateOrderService = async (
+  id: string,
+  order: any,
+  lastModifiedBy: string
+) => {
+  const updatedOrder = await Order.findByIdAndUpdate(
+    id,
+    { ...order, lastModifiedBy },
+    {
+      new: true,
+    }
+  );
   return updatedOrder;
 };
 
@@ -115,7 +192,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Cancelled",
       message: `Notification to let you know – order #${updatedOrder?.orderId}
@@ -136,7 +215,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       // order processing
       subject: "Your Beds Divans order has been received!",
@@ -157,7 +238,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.shippingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Completed",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order has been payment has been completed. Thank you for shopping with us. We will send you an email when your order has been shipped. You can track your order by clicking the link below.`,
@@ -177,7 +260,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Delivered",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order has been delivered. Thank you for shopping with us.`,
@@ -191,7 +276,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Payment Pending",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order has been payment has been pending. Please pay to complete your order.`,
@@ -211,7 +298,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Refunded",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order money has been refunded to your account , Thank you for shopping with us.`,
@@ -231,7 +320,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order On Hold",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order has been placed on hold, due to some payment issues. Please contact us for more details.`,
@@ -251,7 +342,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Payment Failed",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order payment has been failed, Please try again.`,
@@ -271,7 +364,9 @@ export const updateOrderStatusService = async (id: string, status: string) => {
       shippingPrice: 0,
       user: updatedOrder?.user as any,
       shippingAddress: updatedOrder?.shippingAddress as any,
-      billingAddress: updatedOrder?.shippingAddress as any,
+      billingAddress:
+        (updatedOrder?.billingAddress as any) ||
+        (updatedOrder?.shippingAddress as any),
       paymentMethod: updatedOrder?.payment?.paymentMethod as any,
       subject: "Order Pending",
       message: `Hi ${updatedOrder?.user?.firstName}, Your order has been placed on pending, Please contact us for more details.`,
@@ -313,4 +408,8 @@ export const bulkOrderUpdateService = async (ids: string[], status: string) => {
     );
     return orders;
   }
+};
+
+export const findOrderByOrderIdService = async (id: string) => {
+  return await Order.find({ orderId: id });
 };

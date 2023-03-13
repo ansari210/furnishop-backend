@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import {
+  amazonPayCreateSessionService,
+  clearPayCreateSessionService,
   createCheckoutSessionService,
   createKlarnaSessionService,
   klarnaPlaceOrderService,
@@ -44,6 +46,34 @@ export const handleKlarnaPlaceOrderController = async (
     if (!line_items) return res.status(400).json({ error: "Missing order" });
     if (!token) return res.status(400).json({ error: "Missing token" });
     const session = await klarnaPlaceOrderService(line_items, token);
+    res.status(200).json({ session });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const handleClearPaySessionController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { order } = req.body;
+    if (!order) return res.status(400).json({ error: "Missing order" });
+    const session = await clearPayCreateSessionService(order);
+    res.status(200).json({ session });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const handleAmazonPayController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { line_items } = req.body;
+    if (!line_items) return res.status(400).json({ error: "Missing order" });
+    const session = await amazonPayCreateSessionService(line_items);
     res.status(200).json({ session });
   } catch (error: any) {
     res.status(500).json({ error: error.message });

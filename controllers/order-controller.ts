@@ -10,17 +10,20 @@ import {
   bulkOrderUpdateService,
   createOrderService,
   deleteOrderService,
+  findOrderByOrderIdService,
   getAllOrdersService,
   getOrderByIdService,
   updateOrderService,
   updateOrderStatusService,
 } from "../services/order-services";
 import {
+  clearPayCreateSessionService,
   createCheckoutSessionService,
   createKlarnaSessionService,
 } from "../services/payment-services";
 import { createUserService } from "../services/user-services";
 import { orderStatusTemplate } from "../templates/order-status";
+import createAfterPayPayload from "../utils/CreateAfterPayPayload";
 import createKlarnaPayload from "../utils/CreateKlarnaPayload";
 
 //create order controller
@@ -30,14 +33,12 @@ export const createOrderController = async (req: Request, res: Response) => {
     if (!order) {
       return res.status(400).json({ message: "Order not found" });
     }
-
     await createUserService({
       name: `${order?.user?.firstName} ${order?.user?.lastName}`,
       phone: order?.user?.phone || "",
       email: order?.user?.email || "",
       role: roles.customer,
     });
-
     if (order?.payment?.paymentMethod === paymentMethods.stripe) {
       const line_items = order?.orderItems?.map((item: any) => {
         return {
@@ -58,8 +59,16 @@ export const createOrderController = async (req: Request, res: Response) => {
     } else if (order?.payment?.paymentMethod === paymentMethods.klarna) {
       //KLARNA PAYMENT
       const klarnaPayload = await createKlarnaPayload(order);
+      console.log({ klarnaPayload });
       const session = await createKlarnaSessionService(klarnaPayload);
-      res.status(201).json({ session });
+      res.status(201).json({ session, order });
+    } else if (order?.payment?.paymentMethod === paymentMethods.clearPay) {
+      //CLEARPAY PAYMENT
+      const clearPayPayload = await createAfterPayPayload(order);
+      console.log({ clearPayPayload });
+      const session = await clearPayCreateSessionService(clearPayPayload);
+
+      res.status(201).json({ session, order });
     } else {
       await updateOrderStatusService(order._id as any, orderStatus.Processing);
       res.status(201).json({ order });
@@ -110,7 +119,8 @@ export const orderPaymentSuccessController = async (
       shippingPrice: 0,
       user: order?.user as any,
       shippingAddress: order?.shippingAddress as any,
-      billingAddress: order?.shippingAddress as any,
+      billingAddress:
+        (order?.billingAddress as any) || (order?.shippingAddress as any),
       paymentMethod: order?.payment?.paymentMethod as any,
       subject: "New Order Created",
       message: `Notification to let you know – order #${order?.orderId}
@@ -156,7 +166,7 @@ export const getOrderByIdController = async (req: Request, res: Response) => {
 //get all orders controller
 export const getAllOrdersController = async (req: Request, res: Response) => {
   try {
-    const orders = await getAllOrdersService();
+    const orders = await getAllOrdersService(req?.query?.id as any);
     res.status(200).json({ orders });
   } catch (error) {
     res.status(400).json({ error });
@@ -166,7 +176,19 @@ export const getAllOrdersController = async (req: Request, res: Response) => {
 //update order controller
 export const updateOrderController = async (req: Request, res: Response) => {
   try {
-    const order = await updateOrderService(req.params.id, req.body);
+    const { id: lastModifiedBy } = req.user;
+
+    req.body?.notes?.map((note: any) => {
+      if (!note?.createdBy) {
+        note.createdBy = req?.user?.name;
+      }
+    });
+
+    const order = await updateOrderService(
+      req.params.id,
+      req.body,
+      lastModifiedBy
+    );
     res.status(200).json({ order });
   } catch (error: any) {
     res.status(400).json({ error: error?.message });
@@ -229,6 +251,19 @@ export const bulkOrderStatusUpdateController = async (
     const { ids, status } = req.body;
     const updatedOrders = await bulkOrderUpdateService(ids, status);
     res.status(200).json({ updatedOrders });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+};
+
+export const findOrderByOrderIdController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { orderId } = req.params;
+    const order = await findOrderByOrderIdService(orderId);
+    res.status(200).json({ order });
   } catch (error) {
     res.status(400).json({ error });
   }

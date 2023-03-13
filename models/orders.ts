@@ -33,6 +33,14 @@ export interface IOrder extends Document {
     companyName: string;
   };
 
+  billingAddress: {
+    address: string;
+    townCity: string;
+    postalCode: string;
+    country: string;
+    companyName: string;
+  };
+
   orderNotes: string;
 
   payment: {
@@ -66,6 +74,7 @@ export interface IOrder extends Document {
     percent: number;
     code: string;
   };
+  lastModifiedBy: any;
 }
 
 const orderSchema = new Schema<IOrder>(
@@ -107,13 +116,20 @@ const orderSchema = new Schema<IOrder>(
       companyName: { type: String, required: false },
     },
 
-    orderNotes: { type: String, required: false },
+    billingAddress: {
+      address: { type: String, required: false },
+      townCity: { type: String, required: false },
+      postalCode: { type: String, required: false },
+      country: { type: String, required: false },
+      companyName: { type: String, required: false },
+    },
 
+    orderNotes: { type: String, required: false },
     payment: {
       paymentMethod: {
         type: String,
         required: true,
-        enum: ["stripe", "cash-on-delivery", "klarna"],
+        enum: ["stripe", "cash-on-delivery", "klarna", "clearpay", "amazonpay"],
       },
       paymentResult: {
         id: { type: String },
@@ -138,8 +154,21 @@ const orderSchema = new Schema<IOrder>(
         content: {
           type: String,
         },
+        createdBy: {
+          type: String,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
       },
     ],
+
+    lastModifiedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "users",
+    },
+
     adminImage: {
       type: String,
     },

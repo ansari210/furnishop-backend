@@ -1,9 +1,16 @@
 import stripe from "stripe";
 import axios from "axios";
 import { getCouponByIdService } from "./coupon-services";
+import { getDiscountCouponPrice } from "../utils/GetDiscountPrice";
+import createKlarnaPayload from "../utils/CreateKlarnaPayload";
+import { v4 as uuidv4 } from "uuid";
+import * as fs from "fs";
+const sdk = require("api")("@clearpay-online/v2#1cjo2ll9zk68ae");
+
+import Client = require("@amazonpay/amazon-pay-api-sdk-nodejs");
 
 //INITIALIZATION AND CONFIGURATION
-const PRODUCTION_MODE = false;
+const PRODUCTION_MODE = true;
 
 const STRIPE_SECRET_KEY = (
   PRODUCTION_MODE
@@ -22,6 +29,11 @@ const KLARNA_USERNAME = PRODUCTION_MODE
 const KLARNA_PASSWORD = PRODUCTION_MODE
   ? "bZnO1gzxCa6qFJvu"
   : "UX4sVGUG9y78EvvF";
+
+const AMAZON_PAY_CLIENT_ID =
+  "amzn1.application-oa2-client.78a09ba05239471a938c8cb9a83d08c4";
+const AMAZON_PAY_CLIENT_SECRET =
+  "1f52d4fb3399edc9dc2594c97967eb94e4c5ced05183a29d050f10267128df56";
 
 const stripeClient = new stripe(STRIPE_SECRET_KEY, undefined as any);
 
@@ -85,17 +97,6 @@ export const createCheckoutSessionService = async (
   }
 };
 
-// export const createCheckoutSessionService = async ({ amount, id }: any) => {
-//     const payment = await stripeClient.paymentIntents.create({
-//         amount: amount,
-//         currency: "USD",
-//         description: "Your Company Description",
-//         payment_method: id,
-//         confirm: true,
-//     });
-//     return payment;
-// };
-
 export const createKlarnaSessionService = async (orderInfo: any) => {
   const klarnaSessionEndpoint = `${KLARNA_URL}/payments/v1/sessions`;
   console.log({ KLARNA_USERNAME, KLARNA_PASSWORD });
@@ -122,12 +123,13 @@ export const klarnaPlaceOrderService = async (
   orderInfo: any,
   authorization_token: string
 ) => {
+  const orderItems = await createKlarnaPayload(orderInfo);
   const klarnaPlaceOrderEndpoint = `${KLARNA_URL}/payments/v1/authorizations/${authorization_token}/order`;
   try {
-    const placeOrder = await axios.post(klarnaPlaceOrderEndpoint, orderInfo, {
+    const placeOrder = await axios.post(klarnaPlaceOrderEndpoint, orderItems, {
       auth: {
-        username: process.env.KLARNA_USERNAME || "",
-        password: process.env.KLARNA_PASSWORD || "",
+        username: KLARNA_USERNAME || "",
+        password: KLARNA_PASSWORD || "",
       },
       headers: {
         "Content-Type": "application/json",
@@ -139,4 +141,78 @@ export const klarnaPlaceOrderService = async (
   } catch (error: any) {
     throw new Error(error?.message);
   }
+};
+
+sdk.auth(
+  "400251166",
+  "b889523ab62ade54370313d2c819c013894950bb0dfb00a1dde79ab297cd90036d0d5053fc7e45e984e56d64cb44cf1050390ab98a5b8cfd5cd766f8fbfab9d9"
+);
+export const clearPayCreateSessionService = async (orderInfo: any) => {
+  try {
+    const session = await sdk.createCheckout(orderInfo);
+    return session;
+  } catch (error: any) {
+    console.log({ error });
+    throw new Error(error);
+  }
+};
+
+export const amazonPayCreateSessionService = async (orderInfo: any) => {
+  // @amazonpay/amazon-pay-api-sdk-nodejs
+
+  const config = {
+    publicKeyId: "SANDBOX-AGOCAOVIKBMLVD3QEPTQT75S",
+    privateKey: fs.readFileSync("sandbox.pem"),
+    region: "eu",
+    sandbox: true,
+  };
+
+  const payload = {
+    webCheckoutDetails: {
+      checkoutReviewReturnUrl: "https://example.com/checkout/review",
+      checkoutResultReturnUrl: "https://example.com/checkout/result",
+    },
+    storeId: "amzn1.application-oa2-client.78a09ba05239471a938c8cb9a83d08c4",
+
+    checkoutSessionId: uuidv4().toString().replace(/-/g, ""),
+    paymentDetails: {
+      paymentIntent: "Confirm",
+      canHandlePendingAuthorization: false,
+      chargeAmount: {
+        amount: 50,
+        currencyCode: "GBP",
+      },
+    },
+    merchantMetadata: {
+      merchantReferenceId: uuidv4().toString().replace(/-/g, ""),
+      merchantStoreName: "AmazonTestStoreFront",
+      noteToBuyer: "merchantNoteForBuyer",
+      customInformation: "",
+    },
+
+    // chargeAmount: {
+    //   amount: "2000",
+    //   currencyCode: "GBP",
+    // },
+    // merchantMetadata: {
+    //   merchantReferenceId: "123",
+    // },
+  };
+
+  const headers = {
+    "x-amz-pay-idempotency-key": uuidv4().toString().replace(/-/g, ""),
+  };
+
+  // const testPayClient = new Client.WebStoreClient(config);
+
+  // return testPayClient
+  //   .createCheckoutSession(payload, headers)
+  //   .then(({ data ) => {
+  //     console.log({ data });
+  //     return data;
+  //   }).catch((error) => {
+  //     console.log({ error:error.response.data });
+  //     throw new Error(error);
+  //   }
+  // );
 };
