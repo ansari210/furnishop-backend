@@ -37,6 +37,12 @@ const bedSchema = new Schema(
       required: true,
       default: false,
     },
+    metaTitle: {
+      type: String,
+    },
+    metaDescription: {
+      type: String,
+    },
   },
   {
     timestamps: true,

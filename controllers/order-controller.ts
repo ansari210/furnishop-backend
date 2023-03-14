@@ -13,6 +13,7 @@ import {
   findOrderByOrderIdService,
   getAllOrdersService,
   getOrderByIdService,
+  getOrderByMultipleIdService,
   updateOrderService,
   updateOrderStatusService,
 } from "../services/order-services";
@@ -267,4 +268,11 @@ export const findOrderByOrderIdController = async (
   } catch (error) {
     res.status(400).json({ error });
   }
+};
+
+// GENERATE INVOICE
+export const generateInvoice = async (req: Request, res: Response) => {
+  const ids = req.body;
+  const data = await getOrderByMultipleIdService(ids);
+  res.status(200).json(data);
 };

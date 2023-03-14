@@ -132,6 +132,15 @@ export const getOrderByIdsService = async (order: any) => {
   }
 };
 
+// const orders = await Order.find().where("_id").in(ids).exec();
+// const records = await Order.find().where("_id").in(ids).exec();
+//get order by id
+export const getOrderByMultipleIdService = async (ids: string[]) => {
+  console.log(ids);
+  const records = await Order.findById({ _id: { $in: ids } });
+  return records;
+};
+
 //get order by id
 export const getOrderByIdService = async (id: string) => {
   const order = await Order.findById(id).populate(

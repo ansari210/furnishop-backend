@@ -6,6 +6,7 @@ import {
   createOrderController,
   deleteOrderController,
   findOrderByOrderIdController,
+  generateInvoice,
   getAllOrdersController,
   getOrderByIdController,
   orderPaymentFailedController,
@@ -30,4 +31,7 @@ router.post("/send-order-details", sendOrderDetaisEmailController);
 router.patch("/bulk-update", bulkOrderStatusUpdateController);
 router.get("/search/:orderId", findOrderByOrderIdController);
 
+// Generate Multiple Invoice in Zip
+
+router.post("/generate-invoice", generateInvoice);
 export default router;
