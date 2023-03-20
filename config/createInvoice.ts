@@ -1,6 +1,8 @@
 import fs from "fs";
 import PDFDocument from "pdfkit";
 import blobStream from "blob-stream";
+import { Response } from "express";
+import getStream from "get-stream";
 
 type Invoice = {
   shipping: {
@@ -22,24 +24,22 @@ type Invoice = {
   invoice_nr: number;
 };
 
-function createInvoice(invoice: Invoice, path: fs.PathLike) {
-  let doc = new PDFDocument({ size: "A4", margin: 50 });
+async function createInvoice(invoice: Invoice) {
+  let doc = new PDFDocument({ size: "A4", margin: 50, bufferPages: true });
+
   invoiceHeader(doc);
   invoiceCustomerInformation(doc, invoice);
   invoiceTable(doc, invoice);
   invoiceFooter(doc);
   doc.end();
-  doc.pipe(fs.createWriteStream(path));
-  const stream = doc.pipe(blobStream());
-  stream.on("finish", function () {
-    const url = stream.toBlob("application/pdf");
-    console.log(url);
-  });
+
+  const pdfStream = await getStream.buffer(doc);
+  return pdfStream;
 }
 
 function invoiceHeader(doc: PDFKit.PDFDocument) {
   doc
-    .image("logo.png", 50, 45, { width: 50 })
+    // .image("logo.png", 50, 45, { width: 50 })
     .fillColor("#444444")
     .fontSize(20)
     .text("Beds Divans", 110, 57)
@@ -58,7 +58,7 @@ function invoiceCustomerInformation(doc: PDFKit.PDFDocument, invoice: Invoice) {
     .fontSize(10)
     .text("Invoice Number:", 50, customerInformationTop)
     .font("Helvetica-Bold")
-    .text(invoice.invoice_nr, 150, customerInformationTop)
+    .text(invoice.invoice_nr as any, 150, customerInformationTop)
     .font("Helvetica")
     .text("Invoice Date:", 50, customerInformationTop + 15)
     .text(formatDate(new Date()), 150, customerInformationTop + 15)
@@ -178,7 +178,7 @@ function generateTableRow(
     .text(item, 50, y)
     .text(description, 150, y)
     .text(unitCost, 280, y, { width: 90, align: "right" })
-    .text(quantity, 370, y, { width: 90, align: "right" })
+    .text(quantity as any, 370, y, { width: 90, align: "right" })
     .text(lineTotal, 0, y, { align: "right" });
 }
 

@@ -3,6 +3,7 @@ import createInvoice from "../config/createInvoice";
 import { AcceptedOrderStatus, orderStatus } from "../constants/OrderStatus";
 import { paymentMethods } from "../constants/PaymentMethods";
 import { roles } from "../constants/Roles";
+import fs from "fs";
 import {
   sendEmailWithTemplate,
   sendOrderDetailsService,
@@ -265,7 +266,7 @@ export const findOrderByOrderIdController = async (
   try {
     const { orderId } = req.params;
     const order = await findOrderByOrderIdService(orderId);
-    res.status(200).json({ order });
+    res.status(200).json({ ok: "ok" });
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -273,63 +274,76 @@ export const findOrderByOrderIdController = async (
 
 // GENERATE INVOICE
 
-export const generateInvoice = async (req: Request, res: Response) => {
-  const ids = req.body;
-  const data = await getOrderByMultipleIdService(ids);
+// export const generateInvoice = async (req: Request, res: Response) => {
+//   // const ids = req.body;
+//   // const data = await getOrderByMultipleIdService(ids);
 
-  const invoice = {
-    shipping: {
-      name: "John Doe",
-      address: "1234 Main Street",
-      city: "San Francisco",
-      state: "CA",
-      country: "US",
-      postal_code: 94111,
-    },
-    items: [
-      {
-        item: "Mattress",
-        description: "6FT – Orthopedic Mattress",
-        quantity: 1,
-        amount: 254,
-      },
-      {
-        item: "Headboard",
-        description: "26 Inch Diamond Button Cube Headboard",
-        quantity: 1,
-        amount: 254,
-      },
-      {
-        item: "Feet",
-        description: "Free Castor Wheels",
-        quantity: 1,
-        amount: 254,
-      },
-      {
-        item: "Storage Options",
-        description: "2 Drawers Same Side",
-        quantity: 1,
-        amount: 254,
-      },
-      {
-        item: "Size",
-        description: "6FT",
-        quantity: 1,
-        amount: 254,
-      },
-      {
-        item: "Colour",
-        description: "Black Veince",
-        quantity: 1,
-        amount: 254,
-      },
-    ],
-    subtotal: 8000,
-    paid: 0,
-    invoice_nr: 1234,
-  };
+//   const invoice = {
+//     shipping: {
+//       name: "John Doe",
+//       address: "1234 Main Street",
+//       city: "San Francisco",
+//       state: "CA",
+//       country: "US",
+//       postal_code: 94111,
+//     },
+//     items: [
+//       {
+//         item: "Mattress",
+//         description: "6FT – Orthopedic Mattress",
+//         quantity: 1,
+//         amount: 254,
+//       },
+//       {
+//         item: "Headboard",
+//         description: "26 Inch Diamond Button Cube Headboard",
+//         quantity: 1,
+//         amount: 254,
+//       },
+//       {
+//         item: "Feet",
+//         description: "Free Castor Wheels",
+//         quantity: 1,
+//         amount: 254,
+//       },
+//       {
+//         item: "Storage Options",
+//         description: "2 Drawers Same Side",
+//         quantity: 1,
+//         amount: 254,
+//       },
+//       {
+//         item: "Size",
+//         description: "6FT",
+//         quantity: 1,
+//         amount: 254,
+//       },
+//       {
+//         item: "Colour",
+//         description: "Black Veince",
+//         quantity: 1,
+//         amount: 254,
+//       },
+//     ],
+//     subtotal: 8000,
+//     paid: 0,
+//     invoice_nr: 1234,
+//   };
 
-  createInvoice(invoice, "invoice.pdf");
+//   const invoices = await createInvoice(invoice);
+//   const archive = archiver("zip", {
+//     zlib: { level: 9 }, // set the compression level
+//   });
 
-  res.status(200).json(data);
-};
+//   const filename = `Receipt_123.pdf`;
+
+//   archive.append(invoices, { name: filename });
+//   archive.finalize();
+
+//   const stream = res.writeHead(200, {
+//     "Content-Type": "application/zip",
+//     "Content-disposition": `attachment;filename=${filename}.zip`,
+//   });
+
+//   archive.pipe(stream);
+// };

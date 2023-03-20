@@ -165,7 +165,13 @@ export const getOrderByIdService = async (id: string) => {
 export const getAllOrdersService = async (query: string | undefined) => {
   if (query) {
     const orders = await Order.find({
-      $or: [{ orderId: query }, { user: query }],
+      $or: [
+        { orderId: isNaN(Number(query)) ? undefined : Number(query) },
+        { "user.firstName": { $regex: query, $options: "i" } },
+        { "user.lastName": { $regex: query, $options: "i" } },
+        { "user.email": { $regex: query, $options: "i" } },
+        { "shippingAddress.postalCode": { $regex: query, $options: "i" } },
+      ],
     }).sort("-createdAt");
     return orders;
   }
@@ -430,6 +436,14 @@ export const bulkOrderUpdateService = async (ids: string[], status: string) => {
   }
 };
 
-export const findOrderByOrderIdService = async (id: string) => {
-  return await Order.find({ orderId: id });
+export const findOrderByOrderIdService = async (query: string) => {
+  return await Order.find({
+    $or: [
+      // { orderId: Number(query) },
+      { "user.firstName": { $regex: query, $options: "i" } },
+      { "user.lastName": { $regex: query, $options: "i" } },
+      { "user.email": { $regex: query, $options: "i" } },
+      { "shippingAddress.postalCode": { $regex: query, $options: "i" } },
+    ],
+  });
 };
