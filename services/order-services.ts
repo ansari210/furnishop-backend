@@ -9,7 +9,7 @@ import {
 import { getCouponByIdService } from "./coupon-services";
 import { sendEmailWithTemplate } from "./email-services";
 import { resizeImageAndUpload } from "./image-service";
-
+import { ObjectId } from "mongodb";
 //create order
 export const createOrderService = async (order: any) => {
   if (order?.orderItems && order?.orderItems?.length > 0) {
@@ -136,8 +136,19 @@ export const getOrderByIdsService = async (order: any) => {
 // const records = await Order.find().where("_id").in(ids).exec();
 //get order by id
 export const getOrderByMultipleIdService = async (ids: string[]) => {
-  console.log(ids);
-  const records = await Order.findById({ _id: { $in: ids } });
+  // const changeToObjectIds = ids.map((id) => new ObjectId(id));
+  // const records = await Order.find().where("_id").in(changeToObjectIds).exec();
+  // const records = await Order.find({
+  //   _id: { $in: ids.map((pd) => new ObjectId(pd)) },
+  // });
+  // const records=await Order.where(id:{:$in=>ids})
+
+  // console.log({ records });
+  const records = await Order.find({
+    _id: {
+      $in: ids.map((id) => new ObjectId(id)),
+    },
+  });
   return records;
 };
 

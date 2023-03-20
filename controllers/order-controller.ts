@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import createInvoice from "../config/createInvoice";
 import { AcceptedOrderStatus, orderStatus } from "../constants/OrderStatus";
 import { paymentMethods } from "../constants/PaymentMethods";
 import { roles } from "../constants/Roles";
@@ -271,8 +272,64 @@ export const findOrderByOrderIdController = async (
 };
 
 // GENERATE INVOICE
+
 export const generateInvoice = async (req: Request, res: Response) => {
   const ids = req.body;
   const data = await getOrderByMultipleIdService(ids);
+
+  const invoice = {
+    shipping: {
+      name: "John Doe",
+      address: "1234 Main Street",
+      city: "San Francisco",
+      state: "CA",
+      country: "US",
+      postal_code: 94111,
+    },
+    items: [
+      {
+        item: "Mattress",
+        description: "6FT – Orthopedic Mattress",
+        quantity: 1,
+        amount: 254,
+      },
+      {
+        item: "Headboard",
+        description: "26 Inch Diamond Button Cube Headboard",
+        quantity: 1,
+        amount: 254,
+      },
+      {
+        item: "Feet",
+        description: "Free Castor Wheels",
+        quantity: 1,
+        amount: 254,
+      },
+      {
+        item: "Storage Options",
+        description: "2 Drawers Same Side",
+        quantity: 1,
+        amount: 254,
+      },
+      {
+        item: "Size",
+        description: "6FT",
+        quantity: 1,
+        amount: 254,
+      },
+      {
+        item: "Colour",
+        description: "Black Veince",
+        quantity: 1,
+        amount: 254,
+      },
+    ],
+    subtotal: 8000,
+    paid: 0,
+    invoice_nr: 1234,
+  };
+
+  createInvoice(invoice, "invoice.pdf");
+
   res.status(200).json(data);
 };

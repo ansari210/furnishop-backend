@@ -33,5 +33,5 @@ router.get("/search/:orderId", findOrderByOrderIdController);
 
 // Generate Multiple Invoice in Zip
 
-router.post("/generate-invoice", generateInvoice);
+router.post("/generate-bulk-invoice", generateInvoice);
 export default router;
