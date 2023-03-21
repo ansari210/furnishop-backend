@@ -9,11 +9,12 @@ import {
 } from "../services/coupon-services";
 export const createCouponController = async (req: Request, res: Response) => {
   try {
-    const { label, percent, max, description } = req.body;
+    const { label, percent, max, description, min } = req.body;
     const coupon = await createCouponService({
       label,
       percent,
       max,
+      min,
       description,
     });
     res.status(201).json(coupon);

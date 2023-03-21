@@ -4,6 +4,7 @@ interface ICoupon {
   label: string;
   percent: number;
   max: number;
+  min: number;
   description: string;
 }
 
@@ -11,6 +12,7 @@ export const createCouponService = async ({
   label,
   percent,
   max,
+  min,
   description,
 }: ICoupon) => {
   const findCoupon = await coupons.findOne({ label });
@@ -22,6 +24,7 @@ export const createCouponService = async ({
     percent,
     max,
     description,
+    min,
   });
   return newCoupon;
 };

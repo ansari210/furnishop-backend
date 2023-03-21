@@ -4,6 +4,7 @@ interface Coupons extends Document {
   label: string;
   percent: number;
   max: number;
+  min: number;
   description: string;
 }
 
@@ -18,6 +19,10 @@ const CouponsSchema = new Schema<Coupons>(
       required: true,
     },
     max: {
+      type: Number,
+      required: true,
+    },
+    min: {
       type: Number,
       required: true,
     },
