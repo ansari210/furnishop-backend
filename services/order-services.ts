@@ -171,6 +171,7 @@ export const getAllOrdersService = async (query: string | undefined) => {
         { "user.lastName": { $regex: query, $options: "i" } },
         { "user.email": { $regex: query, $options: "i" } },
         { "shippingAddress.postalCode": { $regex: query, $options: "i" } },
+        { "user.phone": { $regex: query, $options: "i" } },
       ],
     }).sort("-createdAt");
     return orders;
