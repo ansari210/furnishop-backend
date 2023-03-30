@@ -27,7 +27,6 @@ import {
   updateUserOrderIdBySocketId,
 } from "./services/socket-services";
 import { getOrderByIdService } from "./services/order-services";
-import { insertDataToMerchant } from "./services/google-services";
 
 dotenv.config();
 

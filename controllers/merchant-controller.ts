@@ -31,6 +31,7 @@ export const getProductByIdController = async (req: Request, res: Response) => {
     const variant = product?.variants[0] as unknown as V;
     const response = await insertDataToMerchant({
       batchId: randomInt(0, 99999),
+      offerId: `${randomInt(0, 9999)}`,
       title: product?.name as string,
       description: product?.metaDescription || (product?.description as string),
       color: variant?.accessories?.color[0]?.name,

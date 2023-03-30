@@ -25,6 +25,7 @@ const merchantCenter = google.content({
 
 type ProductType = {
   batchId: number;
+  offerId: string;
   title: string;
   description: string;
   price: {
@@ -41,11 +42,11 @@ type ProductType = {
 export const insertDataToMerchant = async (productData: ProductType) => {
   const staticData = {
     kind: "content#product",
-    offerId: "2222",
     channel: "online",
     availability: "in stock",
     brand: "bedsdivans",
     contentLanguage: "en",
+    // offerId: "2222",
     targetCountry: "UK",
   };
   return await merchantCenter.products.custombatch({
