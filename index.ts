@@ -26,6 +26,7 @@ import {
   updateUserOrderIdBySocketId,
 } from "./services/socket-services";
 import { getOrderByIdService } from "./services/order-services";
+import { listProductItems } from "./services/google-services";
 
 dotenv.config();
 
@@ -72,8 +73,14 @@ app.use("/api/beds-image", express.static("dist/uploads/beds"));
 app.use("/api/icons-image", express.static("dist/uploads/icons"));
 
 //ROUTES
-app.get("/api", (req, res) => {
-  res.status(200).json({ name: "Hello World! 2" });
+app.get("/api", async (req, res) => {
+  try {
+    const data = await listProductItems();
+    console.log(data);
+    res.status(200).json(data.data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 app.use("/api/user", userRoutes);
