@@ -5,7 +5,7 @@ import { randomInt } from "crypto";
 
 const endpoint = `https://bedsdivans.co.uk/product`;
 
-type V = {
+type VarientsTypes = {
   price: {
     basePrice: number;
     salePrice: number;
@@ -28,7 +28,7 @@ export const getProductByIdController = async (req: Request, res: Response) => {
       select: `_id accessories.color size price image`,
       perDocumentLimit: 1,
     });
-    const variant = product?.variants[0] as unknown as V;
+    const variant = product?.variants[0] as unknown as VarientsTypes;
     const response = await insertDataToMerchant({
       batchId: randomInt(0, 99999),
       offerId: `${randomInt(0, 9999)}`,
