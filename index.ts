@@ -15,6 +15,7 @@ import bedsRoutes from "./routes/fileroutes";
 import reviewsRoutes from "./routes/reviews";
 import headboardRoutes from "./routes/headboard";
 import couponsRoutes from "./routes/coupon";
+import merchantRoutes from "./routes/merchant";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import {
@@ -26,7 +27,7 @@ import {
   updateUserOrderIdBySocketId,
 } from "./services/socket-services";
 import { getOrderByIdService } from "./services/order-services";
-import { listProductItems } from "./services/google-services";
+import { insertDataToMerchant } from "./services/google-services";
 
 dotenv.config();
 
@@ -73,15 +74,15 @@ app.use("/api/beds-image", express.static("dist/uploads/beds"));
 app.use("/api/icons-image", express.static("dist/uploads/icons"));
 
 //ROUTES
-app.get("/api", async (req, res) => {
-  try {
-    const data = await listProductItems();
-    console.log(data);
-    res.status(200).json(data.data);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
+// app.get("/api", async (req, res) => {
+//   try {
+//     const data = await listProductItems();
+//     console.log(data);
+//     res.status(200).json(data.data);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// });
 
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
@@ -94,6 +95,7 @@ app.use("/api/reviews", reviewsRoutes);
 app.use("/api/bedsMultiple", bedsRoutes);
 app.use("/api/reviews", reviews);
 app.use("/api/coupons", couponsRoutes);
+app.use("/api/google-merchant", merchantRoutes);
 
 // PORT LISTEN
 server.listen(port, () => {

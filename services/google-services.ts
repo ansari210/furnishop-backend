@@ -1,9 +1,6 @@
 import { google } from "googleapis";
 import { OAuth2Client } from "google-auth-library";
 
-const merchant_ID = "523342500";
-const feed_Name = "test";
-
 const CLIENT_ID =
   "659926905568-8hji44m9je4ankkel25bfilo82qfrpmj.apps.googleusercontent.com";
 const CLIENT_SECRET = "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";
@@ -26,38 +23,49 @@ const merchantCenter = google.content({
   auth: authClient,
 });
 
-export const listProductItems = async () => {
+type ProductType = {
+  batchId: number;
+  title: string;
+  description: string;
+  price: {
+    value: string;
+    currency: string;
+  };
+  sizes: string[];
+  color: string;
+  link: string;
+  imageLink: string;
+  mobileLink: string;
+};
+
+export const insertDataToMerchant = async (productData: ProductType) => {
+  const staticData = {
+    kind: "content#product",
+    offerId: "2222",
+    channel: "online",
+    availability: "in stock",
+    brand: "bedsdivans",
+    contentLanguage: "en",
+    targetCountry: "UK",
+  };
   return await merchantCenter.products.custombatch({
     requestBody: {
       entries: [
         {
-          batchId: 2222,
           merchantId: "523342500",
+          batchId: productData.batchId,
           method: "insert",
           product: {
-            kind: "content#product",
-            offerId: "2222",
-            title:
-              "Grey Linen Divan Bed Base or Set Headboard & Mattress Free Uk Delivery",
-            description: `Variety of colours available in many different fabrics`,
-            channel: "online",
-            price: {
-              value: "102",
-              currency: "GBP",
-            },
-            sizes: ["2FT 6″ – Small Single "],
-            availability: "in stock",
-            brand: "bedsdivans",
-            color: "Grey Linen",
-            // condition: "new",
-            // gender: "male",
-            contentLanguage: "en",
-            targetCountry: "UK",
-            link: "https://bedsdivans.co.uk/product/modern-grey-divan-bed",
-            imageLink:
-              "https://api1.bedsdivans.co.uk/api/beds-image/red-1674043360824.webp",
-            mobileLink:
-              "https://bedsdivans.co.uk/product/modern-grey-divan-bed",
+            ...staticData,
+            // Dynamic Data
+            title: productData.title,
+            description: productData.description,
+            price: productData.price,
+            sizes: productData.sizes,
+            color: productData.color,
+            link: productData.link,
+            imageLink: productData.imageLink,
+            mobileLink: productData.mobileLink,
           },
         },
       ],
