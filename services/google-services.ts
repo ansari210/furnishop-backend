@@ -6,7 +6,7 @@ const CLIENT_ID =
 const CLIENT_SECRET = "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";
 const REDIRECT_URI = "https://developers.google.com/oauthplayground";
 const REFRESH_TOKEN =
-  "1//04IwCF_hbdy9RCgYIARAAGAQSNwF-L9IrcrxpkkLp0n8uybrvwShb0whDERueLe3TND1LFsfHX-96qFfYxwuh3K4SfT18NRr1uNs";
+  "1//04iD4Fzg4_Hn2CgYIARAAGAQSNwF-L9IrrHXqpQK0CLWCRsPSawao8dNJSzT5XUk1EQPkR-Lt1_tuu0J_LwtFrnnF9VNa2MgfRLY";
 
 const authClient = new OAuth2Client({
   clientId: CLIENT_ID,
@@ -44,9 +44,8 @@ export const insertDataToMerchant = async (productData: ProductType) => {
     kind: "content#product",
     channel: "online",
     availability: "in stock",
-    brand: "bedsdivans",
+    brand: "Bedsdivans",
     contentLanguage: "en",
-    // offerId: "2222",
     targetCountry: "UK",
   };
   return await merchantCenter.products.custombatch({
@@ -59,14 +58,15 @@ export const insertDataToMerchant = async (productData: ProductType) => {
           product: {
             ...staticData,
             // Dynamic Data
-            title: productData.title,
-            description: productData.description,
-            price: productData.price,
-            sizes: productData.sizes,
-            color: productData.color,
-            link: productData.link,
-            imageLink: productData.imageLink,
-            mobileLink: productData.mobileLink,
+            title: productData?.title,
+            description: productData?.description,
+            price: productData?.price,
+            sizes: productData?.sizes,
+            color: productData?.color,
+            link: productData?.link,
+            imageLink: productData?.imageLink,
+            mobileLink: productData?.mobileLink,
+            offerId: productData?.offerId,
           },
         },
       ],

@@ -12,7 +12,9 @@ type VarientsTypes = {
   };
   accessories: {
     color: {
-      name: string;
+      name: {
+        label?: string;
+      };
     }[];
   };
   _id: string;
@@ -29,12 +31,13 @@ export const getProductByIdController = async (req: Request, res: Response) => {
       perDocumentLimit: 1,
     });
     const variant = product?.variants[0] as unknown as VarientsTypes;
-    const response = await insertDataToMerchant({
+    const insert = {
       batchId: randomInt(0, 99999),
-      offerId: `${randomInt(0, 9999)}`,
+      offerId: `${id}`,
       title: product?.name as string,
       description: product?.metaDescription || (product?.description as string),
-      color: variant?.accessories?.color[0]?.name,
+      color:
+        (variant?.accessories?.color[0]?.name?.label as string) || "One Color",
       imageLink: variant?.image,
       link: `${endpoint}/${product?.slug}`,
       mobileLink: `${endpoint}/${product?.slug}`,
@@ -43,8 +46,9 @@ export const getProductByIdController = async (req: Request, res: Response) => {
         currency: "GBP",
       },
       sizes: [variant?.size],
-    });
-    res.status(200).json(response.data);
+    };
+    const response = await insertDataToMerchant(insert);
+    res.status(200).json({ merchant: response.data, ...insert });
   } catch (error: any) {
     res.status(500).send(error);
   }
