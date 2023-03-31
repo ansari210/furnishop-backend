@@ -72,7 +72,7 @@ export const handleAmazonPayController = async (
 ) => {
   try {
     const { line_items } = req.body;
-    if (!line_items) return res.status(400).json({ error: "Missing order" });
+    // if (!line_items) return res.status(400).json({ error: "Missing order" });
     const session = await amazonPayCreateSessionService(line_items);
     res.status(200).json({ session });
   } catch (error: any) {

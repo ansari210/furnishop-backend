@@ -159,7 +159,6 @@ export const clearPayCreateSessionService = async (orderInfo: any) => {
 
 export const amazonPayCreateSessionService = async (orderInfo: any) => {
   // @amazonpay/amazon-pay-api-sdk-nodejs
-
   const config = {
     publicKeyId: "SANDBOX-AGOCAOVIKBMLVD3QEPTQT75S",
     privateKey: fs.readFileSync("sandbox.pem"),
@@ -174,7 +173,7 @@ export const amazonPayCreateSessionService = async (orderInfo: any) => {
     },
     storeId: "amzn1.application-oa2-client.78a09ba05239471a938c8cb9a83d08c4",
 
-    checkoutSessionId: uuidv4().toString().replace(/-/g, ""),
+    checkoutSessionId: 123,
     paymentDetails: {
       paymentIntent: "Confirm",
       canHandlePendingAuthorization: false,
@@ -189,7 +188,6 @@ export const amazonPayCreateSessionService = async (orderInfo: any) => {
       noteToBuyer: "merchantNoteForBuyer",
       customInformation: "",
     },
-
     // chargeAmount: {
     //   amount: "2000",
     //   currencyCode: "GBP",
@@ -203,16 +201,16 @@ export const amazonPayCreateSessionService = async (orderInfo: any) => {
     "x-amz-pay-idempotency-key": uuidv4().toString().replace(/-/g, ""),
   };
 
-  // const testPayClient = new Client.WebStoreClient(config);
+  const testPayClient = new (Client as any).WebStoreClient(config);
 
-  // return testPayClient
-  //   .createCheckoutSession(payload, headers)
-  //   .then(({ data ) => {
-  //     console.log({ data });
-  //     return data;
-  //   }).catch((error) => {
-  //     console.log({ error:error.response.data });
-  //     throw new Error(error);
-  //   }
-  // );
+  return testPayClient
+    .createCheckoutSession(payload, headers)
+    .then(({ data }: { data: any }) => {
+      console.log({ data });
+      return data;
+    })
+    .catch((error: any) => {
+      console.log({ error: error.response.data });
+      throw new Error(error);
+    });
 };
