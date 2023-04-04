@@ -16,6 +16,7 @@ import reviewsRoutes from "./routes/reviews";
 import headboardRoutes from "./routes/headboard";
 import couponsRoutes from "./routes/coupon";
 import merchantRoutes from "./routes/merchant";
+import blogsRoutes from "./routes/blogs";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import {
@@ -95,6 +96,9 @@ app.use("/api/bedsMultiple", bedsRoutes);
 app.use("/api/reviews", reviews);
 app.use("/api/coupons", couponsRoutes);
 app.use("/api/google-merchant", merchantRoutes);
+
+// Create Blogs
+app.use("/api/blogs", blogsRoutes);
 
 // PORT LISTEN
 server.listen(port, () => {

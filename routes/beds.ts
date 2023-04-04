@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
   let { page = 1, limit = 8 } = req.query;
 
   page = Number(page);
-  limit = limit > 50 ? 50 : Number(limit);
+  limit = Number(limit) > 50 ? 50 : Number(limit);
 
   try {
     const getAllBeds = await beds
