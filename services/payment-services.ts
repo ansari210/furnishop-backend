@@ -150,6 +150,7 @@ sdk.auth(
 export const clearPayCreateSessionService = async (orderInfo: any) => {
   try {
     const session = await sdk.createCheckout(orderInfo);
+    console.log({ session });
     return session;
   } catch (error: any) {
     console.log({ error });

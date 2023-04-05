@@ -137,7 +137,7 @@ export const orderPaymentSuccessController = async (
     );
 
     res.redirect(
-      `${process.env.CLIENT_URL}/order/success?paymentMethod=Stripe&price=${order?.totalPrice}&orderId=${order?.orderId}&createdAt=${order?.createdAt}`
+      `${process.env.CLIENT_URL}/order/success?paymentMethod=${order?.payment?.paymentMethod}&price=${order?.totalPrice}&orderId=${order?.orderId}&createdAt=${order?.createdAt}`
     );
   } catch (error: any) {
     res.status(400).json({ error: error.message });
