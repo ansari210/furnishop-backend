@@ -252,7 +252,7 @@ export const bulkOrderStatusUpdateController = async (
 ) => {
   try {
     const { ids, status } = req.body;
-    const updatedOrders = await bulkOrderUpdateService(ids, status);
+    const updatedOrders = await bulkOrderUpdateService(ids, status, req.user);
     res.status(200).json({ updatedOrders });
   } catch (error) {
     res.status(400).json({ error });
