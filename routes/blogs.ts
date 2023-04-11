@@ -11,7 +11,7 @@ router.get("/", async (req: Request, res: Response) => {
   // Validations...
   try {
     const createBlogs = await blogs.find();
-    res.status(200).json(createBlogs);
+    res.status(200).json({data: createBlogs});
   } catch (error) {
     res.status(500).send(error);
   }
