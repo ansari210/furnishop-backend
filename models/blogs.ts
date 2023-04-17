@@ -1,5 +1,4 @@
 import { model, Schema } from "mongoose";
-import slugify from "slugify";
 
 const blogSchema = new Schema(
   {
@@ -47,14 +46,6 @@ const blogSchema = new Schema(
     timestamps: true,
   }
 );
-
-// blogSchema.pre("save", function (next) {
-//   // Only generate slug if title has changed
-//   if (this.isModified("name")) {
-//     // Generate slug from title using slugify package
-//     this.slug = slugify(this.slug, { lower: true });
-//   }
-// });
 
 const Blogs = model("blogs", blogSchema);
 export default Blogs;
