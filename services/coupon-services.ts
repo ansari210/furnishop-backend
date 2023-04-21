@@ -6,6 +6,8 @@ interface ICoupon {
   max: number;
   min: number;
   description: string;
+  startdate:Date;
+  enddate:Date;
 }
 
 export const createCouponService = async ({
@@ -14,6 +16,8 @@ export const createCouponService = async ({
   max,
   min,
   description,
+  startdate,
+  enddate,
 }: ICoupon) => {
   const findCoupon = await coupons.findOne({ label });
   if (findCoupon) {
@@ -25,6 +29,8 @@ export const createCouponService = async ({
     max,
     description,
     min,
+    startdate,
+    enddate,
   });
   return newCoupon;
 };

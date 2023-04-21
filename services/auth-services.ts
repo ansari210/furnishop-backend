@@ -1,9 +1,7 @@
 import jwt from "jsonwebtoken";
 import users from "../models/users";
 import bcrypt from "bcrypt";
-import { sendMagicLinkService } from "./email-services";
-import magicLinks from "../models/magicLinks";
-import uniqid from "uniqid";
+
 
 //SIGN JWT
 export const signJWT = (payload: any) => {
