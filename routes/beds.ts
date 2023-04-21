@@ -305,7 +305,7 @@ router.get("/:id", async (req, res) => {
 
 //UPLOAD NEW BED
 
-router.post("/create", isAdmin, async (req: Request, res: Response) => {
+router.post("/create",  async (req: Request, res: Response) => {
   const {
     name,
     slug,
@@ -341,7 +341,7 @@ router.post("/create", isAdmin, async (req: Request, res: Response) => {
 });
 
 //ADD/CREATE BED VARIANTS
-router.post("/add-bed/:id", isAdmin, async (req, res) => {
+router.post("/add-bed/:id", async (req, res) => {
   const { id } = req.params;
 
   if (!isValidObjectId(id)) {
@@ -390,7 +390,7 @@ router.post("/add-bed/:id", isAdmin, async (req, res) => {
 });
 
 //UPDATE BED VARIANTS
-router.patch("/update-bed-variant/:id", isAdmin, async (req, res) => {
+router.patch("/update-bed-variant/:id", async (req, res) => {
   const { id } = req.params;
   const { size, image, price, accessories, isDraft } = req.body;
 
@@ -441,7 +441,7 @@ router.post("/upload-image", upload.single("image"), async (req, res) => {
 });
 
 // UPDATE BED BY ID
-router.patch("/update-bed/:id", isAdmin, async (req, res) => {
+router.patch("/update-bed/:id",  async (req, res) => {
   const { id } = req.params;
 
   const {
@@ -483,7 +483,7 @@ router.patch("/update-bed/:id", isAdmin, async (req, res) => {
 });
 
 // DELETE BED BY ID
-router.delete("/delete-bed/:id", isAdmin, async (req, res) => {
+router.delete("/delete-bed/:id",  async (req, res) => {
   const { id } = req.params;
   try {
     const deletedBed = await beds.findByIdAndDelete(id);
@@ -497,7 +497,7 @@ router.delete("/delete-bed/:id", isAdmin, async (req, res) => {
 });
 
 // DELETE VARIANT BY ID
-router.delete("/delete-bed-variant/:id", isAdmin, async (req, res) => {
+router.delete("/delete-bed-variant/:id",  async (req, res) => {
   const { id } = req.params;
   try {
     const deletedBed = await bedsVariants.findByIdAndDelete(id);

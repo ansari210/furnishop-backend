@@ -10,6 +10,10 @@ const blogsSchema = new Schema(
       type: String,
       required: true,
     },
+    blogsummary: {
+      type: String,
+      required: false,
+    },
     description: {
       type: String,
       required: false,
