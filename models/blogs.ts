@@ -9,6 +9,7 @@ const blogSchema = new Schema(
     slug: {
       type: String,
       required: true,
+      unique: true,
     },
     blogsummary: {
       type: String,
@@ -50,4 +51,5 @@ const blogSchema = new Schema(
   }
 );
 
-export default model("blogs", blogSchema);
+const Blogs = model("blogs", blogSchema);
+export default Blogs;
