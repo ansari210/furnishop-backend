@@ -105,6 +105,22 @@ export const findColorByIdService = async (bedId: string, colorId: string) => {
 
     return color;
 };
+//find firm by id
+export const findFirmByIdService = async (bedId: string, firmId: string) => {
+    const bed = await bedsVariants.findById(bedId);
+
+    if (!bed) {
+        throw new Error("Bed not found");
+    }
+
+    const firm = bed.accessories.color.find((firm) => firm._id == firmId);
+
+    if (!firm) {
+        return null;
+    }
+
+    return firm;
+};
 
 //find bed by id
 export const findBedVariantWithProductNameByIdService = async (

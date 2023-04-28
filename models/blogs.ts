@@ -11,13 +11,13 @@ const blogSchema = new Schema(
       required: true,
       unique: true,
     },
-    blogsummary: {
-      type: String,
-      required: false,
-    },
     content: {
       type: String,
       required: false,
+    },
+    blogsummary:{
+      type:String,
+      require:false,
     },
     images: [
       {

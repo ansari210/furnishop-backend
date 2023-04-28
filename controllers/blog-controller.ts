@@ -56,6 +56,7 @@ export const createBlog = async (req: Request, res: Response) => {
     name,
     slug,
     content,
+    blogsummary,
     images,
     categories,
     metaTitle,
@@ -77,6 +78,7 @@ export const createBlog = async (req: Request, res: Response) => {
       name,
       slug: slugify(slug, { lower: true, strict: true }),
       content: sanitizeHtml(content),
+      blogsummary:sanitizeHtml(blogsummary),
       images: Array.isArray(images) ? images : undefined,
       categories: Array.isArray(categories) ? categories : undefined,
       metaTitle,
@@ -100,6 +102,7 @@ export const updateSingleBlog = async (req: Request, res: Response) => {
       ...req.body,
       slug: slugify(req.body.slug, { lower: true, strict: true }),
       content: sanitizeHtml(req.body.content),
+      blogsummary:sanitizeHtml(req.body.blogsummary),
       images: Array.isArray(req.body.images) ? req.body.images : undefined,
       categories: Array.isArray(req.body.categories)
         ? req.body.categories

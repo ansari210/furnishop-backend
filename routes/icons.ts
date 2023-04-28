@@ -43,7 +43,7 @@ router.post("/accessories", upload.single("image"), async (req, res) => {
     const findDuplicatecolorIcon = await accessoriesIcons.findOne({
       value: value,
       type: type,
-      size, //color ,headboard, size,mattress
+      size, //color ,headboard, size,mattress,firm
     });
 
     if (findDuplicatecolorIcon) {
@@ -203,7 +203,7 @@ router.patch("/update/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-router.delete("/accessories/:id",  (req, res) => {
+router.delete("/accessories/:id", (req, res) => {
   try {
     const id = req.params.id;
 

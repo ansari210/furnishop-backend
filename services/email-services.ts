@@ -57,9 +57,9 @@ export const sendMagicLinkService = async (
     // } as any);
 
     const message = {
-      from: "Beds Divans <info@bedsdivans.co.uk>",
+      from: "Furnishop <info@bedsdivans.co.uk>",
       to: email,
-      subject: "Beds Divans - Verify Your Account",
+      subject: "Furnishop - Verify Your Account",
       html: magicLinkTemplate({ redirectTo }),
     };
 
@@ -91,14 +91,14 @@ export const sendOrderDetailsService = async (
       (findOrder?.billingAddress as any) || (findOrder?.shippingAddress as any),
     paymentMethod: findOrder?.payment?.paymentMethod as any,
     // order processing
-    subject: "Your Beds Divans order has been received!",
+    subject: "Your Furnishop order has been received!",
     message: `Hi ${findOrder?.user?.firstName}, <br> <br> Thank you for placing your order with DBZ Khan LTD. @Bedsdivans.co.uk <br> <br> We have received your order, which is currently in process with our logistics team awaiting to be scheduled on a route for delivery. <br> <br> Our aim is to deliver your items within 3-5 working days from when you have placed the order between the hours of 7am-7pm mon-fri. <br> <br> If your delivery address falls within the 100 mile radius of our postcode (WV14 7HZ) then your estimated delivery will be as mentioned above, (within 3-5 working days). <br> <br> However, if your delivery address falls above the 100 mile radius of our (wv14 7hz) postcode then the estimated delivery will be between 3-7 working days with our third-party courier provider (sgk logistics) who will get in touch regarding a delivery day & time via email & text. <br> <br> Our office staff will call/text or email you 24hrs-48hrs prior to your scheduled delivery day to confirm the time of delivery. <br> <br> Furthermore, providing your correct contact details will speed the delivery process. <br> <br>  If you require further assistance then please do read our policy & warranty guidelines and useful information section on our website.`,
   });
 
   await sendEmailWithTemplate(
     findOrder?.user?.email as any,
     template,
-    "Your Beds Divans order has been received!"
+    "Your Furnishop order has been received!"
   );
 };
 
@@ -130,7 +130,7 @@ export const sendEmailWithTemplate = async (
     // });
 
     const message = {
-      from: "bedsdivans@noreply <info@bedsdivans.co.uk>",
+      from: "furnishop@noreply <info@bedsdivans.co.uk>",
       to: email,
       subject: subject,
       html: template,
