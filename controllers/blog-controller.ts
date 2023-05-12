@@ -64,7 +64,7 @@ export const createBlog = async (req: Request, res: Response) => {
     keyWord,
   } = req.body;
 
-  // Validations...
+  // Validations..
   if (!name) {
     return res
       .status(404)

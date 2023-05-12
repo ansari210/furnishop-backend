@@ -95,7 +95,7 @@ export const createOrderController = async (req: Request, res: Response) => {
     res.status(400).json({ error: error.message });
   }
 };
-
+//Product Order Payment Success Controller
 export const orderPaymentSuccessController = async (
   req: Request,
   res: Response
@@ -144,6 +144,7 @@ export const orderPaymentSuccessController = async (
   }
 };
 
+//Product Order Payment Fail Cotroller
 export const orderPaymentFailedController = async (
   req: Request,
   res: Response
@@ -231,6 +232,8 @@ export const updateOrderStatusController = async (
   }
 };
 
+
+//Send Product Order On Mail
 export const sendOrderDetaisEmailController = async (
   req: Request,
   res: Response
@@ -245,7 +248,7 @@ export const sendOrderDetaisEmailController = async (
     res.status(400).json({ error });
   }
 };
-
+//Update Bulk Order Status Controller
 export const bulkOrderStatusUpdateController = async (
   req: Request,
   res: Response
@@ -258,7 +261,7 @@ export const bulkOrderStatusUpdateController = async (
     res.status(400).json({ error });
   }
 };
-
+//Find Product Order By Id
 export const findOrderByOrderIdController = async (
   req: Request,
   res: Response

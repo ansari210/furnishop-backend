@@ -143,3 +143,43 @@ export const resizeIconAndUpload = async (
         throw error;
     }
 };
+
+//Resize Banner 
+export const resiSizeBanner = async (
+    file: Express.Multer.File | undefined,
+    filename: string
+) => {
+    if (!file) return undefined;
+
+    const time = new Date().getTime();
+    const fileName = `${filename}-${time}.webp`;
+
+    const folderPath = path.join(__dirname, "../", "uploads", "banner");
+
+    if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath, { recursive: true });
+    }
+
+    const uploadPath = path.join(
+        __dirname,
+        "../",
+        "uploads",
+        "banner",
+        fileName
+    );
+
+    try {
+        await sharp(file.path)
+            .resize( {
+                fit: "cover",
+            })
+            .webp({ quality: 100 })
+            .toFile(path.resolve(uploadPath));
+
+        fs.unlinkSync(file.path);
+        return `${process.env.BASE_URL}/api/banner-image/${fileName}`;
+    } catch (error) {
+        fs.unlinkSync(file.path);
+        throw error;
+    }
+};
