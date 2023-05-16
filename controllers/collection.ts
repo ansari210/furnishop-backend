@@ -116,7 +116,7 @@ export const updateCollection = async (req: Request, res: Response) => {
           }
         }
         console.log({ data });
-        // res.send(data);
+        // res.send(data);  
         res.status(200).json({ data });
       });
     console.log({ response });
