@@ -29,7 +29,9 @@ export const createOrderService = async (order: any) => {
           orderItem?.feet,
           orderItem?.mattress,
           orderItem?.color,
-          orderItem?.storage
+          orderItem?.storage,
+          orderItem?.firmness,
+          orderItem?.gaslift,
         );
 
         console.log({ total: data?.totalPrice });
@@ -47,6 +49,8 @@ export const createOrderService = async (order: any) => {
             color: data?.color,
             storage: data?.storage,
             feet: data?.feet,
+            firmness:data?.firmness,
+            gaslift:data?.gaslift,
           },
         };
       }
@@ -84,13 +88,15 @@ export const getOrderByIdsService = async (order: any) => {
         );
 
       if (bedVariantWithProductName) {
-        const data = findAccessoriesLocallyService(
+        const data = (
           bedVariantWithProductName as any,
           orderItem?.headboard,
           orderItem?.feet,
           orderItem?.mattress,
           orderItem?.color,
-          orderItem?.storage
+          orderItem?.storage,
+          orderItem?.firmness,
+          orderItem?.gaslift
         );
 
         console.log({ total: data?.totalPrice });
@@ -108,6 +114,8 @@ export const getOrderByIdsService = async (order: any) => {
             color: data?.color,
             storage: data?.storage,
             feet: data?.feet,
+            firmness:data?.firmness,
+            gaslift:data?.gaslift,
           },
         };
       }

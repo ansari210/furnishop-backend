@@ -1,6 +1,7 @@
 import { roles } from "../constants/Roles";
 import users from "../models/users";
 import bcrypt from "bcrypt";
+import { signJWT } from "./auth-services";
 
 interface IUser {
   name: string;
@@ -13,6 +14,9 @@ interface IUser {
 export const getUserService = (userId: string) => {
   return users.findById(userId).select("-password");
 };
+export const getUserUp=(id:string)=>{
+  return users.findById(id);
+}
 
 export const getAllUsersService = (page: number, limit: number) => {
   return users
@@ -31,7 +35,7 @@ export const createUserService = async (user: IUser) => {
   if (!user.role) {
     throw new Error("Role is required");
   }
-  if (user.role === roles.admin || user.role === roles.superAdmin) {
+  if (user.role === roles.admin || user.role === roles.superAdmin ||user.role===roles.customer) {
     if (!user.password) {
       throw new Error("Password is required for admin and super admin");
     }

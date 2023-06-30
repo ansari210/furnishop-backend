@@ -45,6 +45,20 @@ export interface BedVarient extends Document {
                 price: string;
             }
         ];
+        gaslift:[
+            {
+                _id:string;
+                name:string;
+                price:string;
+            }
+        ];
+        firmness:[
+            {
+                _id:string;
+                name:string;
+                price:string;
+            }
+        ];
     };
 }
 
@@ -151,6 +165,30 @@ const bedVarientSchema = new Schema<BedVarient>(
                     // },
                 },
             ],
+            gaslift:[
+                {
+                    name: {
+                        type: Schema.Types.ObjectId,
+                        ref: "accessoriesIcons",
+                    },
+                    price: {
+                        type: String,
+                        required: true,
+                    },
+                }
+            ],
+            firmness:[
+                {
+                    name: {
+                        type: Schema.Types.ObjectId,
+                        ref: "accessoriesIcons",
+                    },
+                    price: {
+                        type: String,
+                        required: true,
+                    },
+                }
+            ]
         },
     },
     {

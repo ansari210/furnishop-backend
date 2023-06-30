@@ -8,8 +8,9 @@ import { isAdmin, isAuthenticated } from "../middlewares/authentication";
 
 const router = Router();
 
-router.get("/", isAuthenticated, getMyselfController);
+router.get("/",isAuthenticated, getMyselfController);
 router.post("/create", createUserController);
 router.get("/all", getAllUsersController);
+
 
 export default router;

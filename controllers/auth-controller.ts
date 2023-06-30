@@ -8,11 +8,15 @@ import {
     verifyJWT,
 } from "../services/auth-services";
 import { sendMagicLinkService } from "../services/email-services";
+import users from "../models/users";
+import bcrypt from "bcrypt";
+import { getUserUp } from "../services/user-services";
 
 export const handleLoginController = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
         const token = await loginService(email, password);
+        console.log("pop",token)
         return res
             .cookie("access_token", token, {
                 httpOnly: true,
@@ -20,7 +24,7 @@ export const handleLoginController = async (req: Request, res: Response) => {
                 secure: process.env.NODE_ENV === "production",
             })
             .status(200)
-            .json({ success: true, message: "Login successful" });
+            .json({data:token, success: true, message: "Login successful" });
     } catch (error: any) {
         res.status(500).json({ error: error.message });
     }
@@ -122,3 +126,28 @@ export const handleLogoutController = async (req: Request, res: Response) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+export const updateusePass=async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const getUser = await getUserUp(id);
+    console.log("topup",getUser);
+    //     try{  
+    //         const response=await users.findByIdAndUpdate(
+    //         req.params.id,
+    //         {
+    //             $set: {
+    //               password: hashedPassword,
+    //             },
+    //           },
+    //           {new: true }
+    //     )
+    //         res.status(200).json({user:response });
+    //     } catch (error: any) {
+    //         res.status(500).json({ error: error.message,message:"Password Incorrect" });
+          
+    // }
+ 
+}

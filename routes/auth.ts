@@ -5,6 +5,7 @@ import {
     handleUserRegisterController,
     handleVerifyTokenController,
     handleLogoutController,
+    updateusePass,
 } from "../controllers/auth-controller";
 
 const router = Router();
@@ -14,5 +15,6 @@ router.post("/login", handleLoginController);
 router.post("/register", handleUserRegisterController);
 router.post("/verify-token", handleVerifyTokenController);
 router.post("/logout", handleLogoutController);
+router.put("/update/:id",updateusePass)
 
 export default router;

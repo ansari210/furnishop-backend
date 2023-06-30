@@ -35,6 +35,28 @@ router.get("/get-bed-variant/:id", async (req, res) => {
     res.status(500).send(error);
   }
 });
+
+//Seach Product by name
+router.get("/search/:key",async (req, res)=>{
+  try{
+const search=req.params.key;
+console.log(search);
+const secrhData= (await beds.find({name:{$regex:`${search}`,$options:'i'}}).populate({
+  path: "variants",
+  select: "_id accessories.color size price image",
+}).sort({ createdAt: -1 }).lean()) as any;
+console.log(secrhData.length)
+if(secrhData.length>0){
+  res.json(secrhData)
+}else{
+  res.status(200).send({success:true,msg:"Product not found"});
+}
+  }catch(error:any){
+    res.status(400).send({success:false,msg: error.message});
+  }
+})
+
+
 // GET INITIAL DATA
 router.get("/", async (req, res) => {
   let { page = 1, limit = 8 } = req.query;
@@ -314,6 +336,7 @@ router.post("/create",  async (req: Request, res: Response) => {
     images,
     metaTitle,
     metaDescription,
+    sizeguide,
   } = req.body;
 
   if (!name) {
@@ -328,6 +351,7 @@ router.post("/create",  async (req: Request, res: Response) => {
       // SEO TAGS
       metaTitle,
       metaDescription,
+      sizeguide,
       images: Array.isArray(images) ? images : undefined,
       categories: Array.isArray(categories) ? categories : undefined,
     });
@@ -360,6 +384,9 @@ router.post("/add-bed/:id", async (req, res) => {
   if (!bedFind) {
     return res.status(400).json({ message: "Invalid ID provided." });
   }
+
+
+
 
   //CHECKING FOR DUPLICATE BED SIZES (START)
   const bedVariants = (bedFind && bedFind.variants) || [];
@@ -453,6 +480,7 @@ router.patch("/update-bed/:id",  async (req, res) => {
     isDraft,
     metaTitle,
     metaDescription,
+    sizeguide,
   } = req.body;
 
   if (!isValidObjectId(id)) {
@@ -468,6 +496,7 @@ router.patch("/update-bed/:id",  async (req, res) => {
         description,
         metaTitle,
         metaDescription,
+        sizeguide,
         isDraft: isDraft,
         images: Array.isArray(images) ? images : undefined,
         categories: Array.isArray(categories) ? categories : undefined,

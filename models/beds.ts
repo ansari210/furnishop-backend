@@ -43,6 +43,9 @@ const bedSchema = new Schema(
     metaDescription: {
       type: String,
     },
+    sizeguide:{
+      type:String,
+    }
   },
   {
     timestamps: true,

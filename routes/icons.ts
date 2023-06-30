@@ -43,7 +43,7 @@ router.post("/accessories", upload.single("image"), async (req, res) => {
     const findDuplicatecolorIcon = await accessoriesIcons.findOne({
       value: value,
       type: type,
-      size, //color ,headboard, size,mattress,firm
+      size, //color ,headboard, size,mattress,firm,gaslif
     });
 
     if (findDuplicatecolorIcon) {

@@ -106,20 +106,36 @@ export const findColorByIdService = async (bedId: string, colorId: string) => {
     return color;
 };
 //find firm by id
-export const findFirmByIdService = async (bedId: string, firmId: string) => {
+export const findFirmnessByIdService = async (bedId: string, firmId: string) => {
     const bed = await bedsVariants.findById(bedId);
 
     if (!bed) {
         throw new Error("Bed not found");
     }
 
-    const firm = bed.accessories.color.find((firm) => firm._id == firmId);
+    const firmness = bed.accessories.color.find((firmness) => firmness._id == firmId);
 
-    if (!firm) {
+    if (!firmness) {
         return null;
     }
 
-    return firm;
+    return firmness;
+};
+//find gaslift by id
+export const findGasLiftByIdService = async (bedId: string, colorId: string) => {
+    const bed = await bedsVariants.findById(bedId);
+
+    if (!bed) {
+        throw new Error("Bed not found");
+    }
+
+    const gaslift = bed.accessories.color.find((gaslift) => gaslift._id == colorId);
+
+    if (!gaslift) {
+        return null;
+    }
+
+    return gaslift;
 };
 
 //find bed by id
@@ -166,7 +182,9 @@ export const findAccessoriesLocallyService = (
     feetId: string,
     mattressId: string,
     colorId: string,
-    storageId: string
+    storageId: string,
+    gasliftId:string,
+    firmnessId:string,
 ) => {
     const variant = {
         price: bed.price.salePrice,
@@ -215,6 +233,20 @@ export const findAccessoriesLocallyService = (
         storage.name = storage?.name?.label;
     }
 
+    const gaslift = bed.accessories.gaslift.find(
+        (gaslift) => gaslift._id == gasliftId
+    ) as any;
+     if(gaslift){
+        gaslift.name=gaslift?.name.label;
+     }
+    
+     const firmness = bed.accessories.firmness.find(
+        (firmness) => firmness._id == firmnessId
+    ) as any;
+     if(firmness){
+        firmness.name=firmness?.name.label;
+     }
+
     const accessories = {
         headboard,
         feet,
@@ -222,12 +254,16 @@ export const findAccessoriesLocallyService = (
         color,
         storage,
         variant,
+        firmness,
+        gaslift,
         totalPrice:
             Number(variant?.price || 0) +
             Number(headboard?.price || 0) +
             Number(storage?.price || 0) +
             Number(mattress?.price || 0) +
-            Number(feet?.price || 0),
+            Number(feet?.price || 0)+
+            Number(firmness?.price ||0)+
+            Number(gaslift?.price || 0),
 
         name: bed?.name,
         categories: bed?.categories,

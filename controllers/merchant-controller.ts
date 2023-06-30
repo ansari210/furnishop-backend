@@ -36,6 +36,7 @@ export const getProductByIdController = async (req: Request, res: Response) => {
       offerId: `${id}`,
       title: product?.name as string,
       description: product?.metaDescription || (product?.description as string),
+      sizeguide:product?.sizeguide||(product?.sizeguide as string),
       color:
         (variant?.accessories?.color[0]?.name?.label as string) || "One Color",
       imageLink: variant?.image,
